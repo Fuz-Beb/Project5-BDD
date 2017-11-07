@@ -1,9 +1,16 @@
 package tp5;
 
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.TransactionRequiredException;
-import javax.persistence.TypedQuery;
+import org.bson.Document;
+
+import com.mongodb.client.MongoCollection;
+
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Filters.*;
+
+import static com.mongodb.client.model.Filters.eq;
 
 /**
  * Permet d'effectuer les accès à la table seance.
@@ -12,10 +19,7 @@ import javax.persistence.TypedQuery;
 public class TableSeance
 {
     private Connexion cx;
-    private TypedQuery<Seance> stmtExiste;
-    private TypedQuery<Seance> stmtExisteProcesDansSeance;
-    private TypedQuery<Seance> stmtSupprimerSeancesProcesTermine;
-    private TypedQuery<Seance> stmtSeanceNonTerminee;
+    private MongoCollection<Document> seanceCollection;
 
     /**
      * Constructeur de confort. Creation d'une instance. Précompilation
@@ -26,13 +30,7 @@ public class TableSeance
     public TableSeance(Connexion cx)
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select s from Seance s where s.id = :idSeance", Seance.class);
-        stmtExisteProcesDansSeance = cx.getConnection()
-                .createQuery("select s from Seance s where s.proces.id = :idProces", Seance.class);
-        stmtSupprimerSeancesProcesTermine = cx.getConnection().createQuery(
-                "select s from Seance s, Proces p where p.id = :idProces and s.date > CURRENT_DATE", Seance.class);
-        stmtSeanceNonTerminee = cx.getConnection()
-                .createQuery("select s from Seance s where s.id = :idSeance and s.date < CURRENT_DATE", Seance.class);
+        seanceCollection = cx.getDatabase().getCollection("Partie");
     }
 
     /**
@@ -43,8 +41,9 @@ public class TableSeance
      */
     public List<Seance> affichage(int id)
     {
-        stmtExisteProcesDansSeance.setParameter("idProces", id);
-        return stmtExisteProcesDansSeance.getResultList();
+        return null;
+        // stmtExisteProcesDansSeance.setParameter("idProces", id);
+        // return stmtExisteProcesDansSeance.getResultList();
     }
 
     /**
@@ -65,33 +64,33 @@ public class TableSeance
      */
     public Seance getSeance(int id)
     {
-        stmtExiste.setParameter("idSeance", id);
-        return stmtExiste.getSingleResult();
+        Document s = seanceCollection.find(eq("id", id)).first();
+        if (s != null)
+        {
+            return new Seance(s);
+        }
+
+        return null;
     }
 
     /**
      * Suppresion des seances prevues du proces
      * 
      * @param id
-     * @throws Exception
      */
-    public void supprimerSeancesProcesTermine(int id) throws Exception
+    public void supprimerSeancesProcesTermine(int id)
     {
-        stmtSupprimerSeancesProcesTermine.setParameter("idProces", id);
-
-        for (Seance seance : stmtSupprimerSeancesProcesTermine.getResultList())
-            supprimer(seance);
+        seanceCollection.deleteMany(combine(eq("id", id), gt("date", new Date())));
     }
 
     /**
      * Methode de traitement pour effectuerSupprimerSeance
      * 
-     * @param seanceArg
-     * @throws Exception
+     * @param seance_id
      */
-    public void supprimer(Seance seanceArg) throws Exception
+    public void supprimer(int seance_id)
     {
-        cx.getConnection().remove(seanceArg);
+        seanceCollection.deleteOne(eq("id", seance_id));
     }
 
     /**
@@ -102,8 +101,7 @@ public class TableSeance
      */
     public boolean existe(int id)
     {
-        stmtExiste.setParameter("idSeance", id);
-        return !stmtExiste.getResultList().isEmpty();
+        return seanceCollection.find(eq("id", id)).first() != null;
     }
 
     /**
@@ -114,21 +112,16 @@ public class TableSeance
      */
     public boolean seancePassee(int id)
     {
-        stmtSeanceNonTerminee.setParameter("idSeance", id);
-        return !stmtSeanceNonTerminee.getResultList().isEmpty();
+        return seanceCollection.find(combine(eq("id", id), lt("date", new Date()))).first() != null;
     }
 
     /**
      * Ajout de la seance
      * 
      * @param seance
-     * @return la nouvelle seance ajouté
-     * @throws IllegalArgumentException
-     * @throws TransactionRequiredException
      */
-    public Seance ajout(Seance seance) throws IllegalArgumentException, TransactionRequiredException
+    public void ajout(Seance seance)
     {
-        cx.getConnection().persist(seance);
-        return seance;
+        seanceCollection.insertOne(seance.toDocument());
     }
 }

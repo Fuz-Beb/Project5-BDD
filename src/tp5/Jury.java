@@ -1,5 +1,7 @@
 package tp5;
 
+import org.bson.Document;
+
 /**
  * Permet de représenter un tuple de la table jury.
  */
@@ -28,6 +30,16 @@ public class Jury
     public Jury(int nas)
     {
         this.nas = nas;
+    }
+
+    /**
+     * Constructeur de confort
+     * 
+     * @param j
+     */
+    public Jury(Document j)
+    {
+        this(j.getInteger("nas"), j.getString("prenom"), j.getString("nom"), j.getString("sexe"), j.getInteger("age"));
     }
 
     /**
@@ -147,5 +159,16 @@ public class Jury
     public void setProces(int proces)
     {
         this.proces_id = proces;
+    }
+
+    /**
+     * Retourne l'objet courant sous forme de document
+     * 
+     * @return Document
+     */
+    public Document toDocument()
+    {
+        return new Document().append("nas", nas).append("prenom", prenom).append("nom", nom).append("sexe", sexe)
+                .append("age", age).append("proces_id", proces_id);
     }
 }

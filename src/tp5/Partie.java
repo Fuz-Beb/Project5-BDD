@@ -1,5 +1,7 @@
 package tp5;
 
+import org.bson.Document;
+
 /**
  * Permet de représenter un tuple de la table partie.
  *
@@ -7,7 +9,7 @@ package tp5;
 
 public class Partie
 {
-    private int id;    
+    private int id;
     private String prenom;
     private String nom;
     private int avocat_id;
@@ -22,17 +24,27 @@ public class Partie
     /**
      * Constructeur de confort
      * 
+     * @param p
+     */
+    public Partie(Document p)
+    {
+        this(p.getInteger("id"), p.getString("prenom"), p.getString("nom"), p.getInteger("avocat_id"));
+    }
+
+    /**
+     * Constructeur de confort
+     * 
      * @param id
      * @param prenom
      * @param nom
-     * @param avocat
+     * @param avocat_id
      */
-    public Partie(int id, String prenom, String nom, Avocat avocat)
+    public Partie(int id, String prenom, String nom, int avocat_id)
     {
         this.id = id;
         this.prenom = prenom;
         this.nom = nom;
-        this.avocat_id = avocat.getId();
+        this.avocat_id = avocat_id;
     }
 
     /**
@@ -111,5 +123,16 @@ public class Partie
     public void setAvocat(int avocat)
     {
         this.avocat_id = avocat;
+    }
+
+    /**
+     * Retourne l'objet courant sous forme de document
+     * 
+     * @return Document
+     */
+    public Document toDocument()
+    {
+        return new Document().append("id", id).append("prenom", prenom).append("nom", nom).append("avocat_id",
+                avocat_id);
     }
 }

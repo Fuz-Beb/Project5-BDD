@@ -1,9 +1,12 @@
 package tp5;
 
+import static com.mongodb.client.model.Filters.eq;
 import java.util.List;
 
-import javax.persistence.TransactionRequiredException;
-import javax.persistence.TypedQuery;
+import org.bson.Document;
+
+import com.mongodb.client.MongoCollection;
+import static com.mongodb.client.model.Updates.*;
 
 /**
  * Permet d'effectuer les accès à la table jury.
@@ -11,9 +14,7 @@ import javax.persistence.TypedQuery;
 public class TableJury
 {
     private Connexion cx;
-    private TypedQuery<Jury> stmtExiste;
-    private TypedQuery<Jury> stmtSelect;
-    private TypedQuery<Jury> stmtChangeProces;
+    private MongoCollection<Document> juryCollection;
 
     /**
      * Création d'une instance. Des énoncés SQL pour chaque requête sont
@@ -24,10 +25,7 @@ public class TableJury
     public TableJury(Connexion cx)
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select j from Jury j where j.nas = :nasJury", Jury.class);
-        stmtSelect = cx.getConnection().createQuery("select j from Jury j where j.proces is null", Jury.class);
-        stmtChangeProces = cx.getConnection().createQuery("update Jury j SET j.proces = :proces where j.nas = :nasJury",
-                Jury.class);
+        juryCollection = cx.getDatabase().getCollection("Jury");
     }
 
     /**
@@ -45,12 +43,16 @@ public class TableJury
      * 
      * @param id
      * @return Jury
-     * @throws Exception
      */
-    public Jury getJury(int id) throws Exception
+    public Jury getJury(int id)
     {
-        stmtExiste.setParameter("nasJury", id);
-        return stmtExiste.getSingleResult();
+        Document j = juryCollection.find(eq("nas", id)).first();
+        if (j != null)
+        {
+            return new Jury(j);
+        }
+
+        return null;
     }
 
     /**
@@ -61,8 +63,7 @@ public class TableJury
      */
     public boolean existe(Jury jury)
     {
-        stmtExiste.setParameter("nasJury", jury.getNas());
-        return !stmtExiste.getResultList().isEmpty();
+        return juryCollection.find(eq("nas", jury.getNas())).first() != null;
     }
 
     /**
@@ -72,21 +73,18 @@ public class TableJury
      */
     public List<Jury> affichage()
     {
-        return stmtSelect.getResultList();
+        return null;
+//        return stmtSelect.getResultList();
     }
 
     /**
      * Ajout d'un nouveau jury dans la base de données
      * 
      * @param jury
-     * @return le juge qui vient d'être ajouté
-     * @throws IllegalArgumentException
-     * @throws TransactionRequiredException
      */
-    public Jury ajouter(Jury jury) throws IllegalArgumentException, TransactionRequiredException
+    public void ajouter(Jury jury)
     {
-        cx.getConnection().persist(jury);
-        return jury;
+        juryCollection.insertOne(jury.toDocument());
     }
 
     /**
@@ -94,15 +92,9 @@ public class TableJury
      * 
      * @param procesArg
      * @param idJury
-     * @return boolean
      */
-    public boolean assignerProces(int idJury, Proces procesArg)
+    public void assignerProces(int idJury, Proces procesArg)
     {
-        stmtChangeProces.setParameter("proces", procesArg);
-        stmtChangeProces.setParameter("nasJury", idJury);
-
-        if (stmtChangeProces.executeUpdate() == 1)
-            return true;
-        return false;
+        juryCollection.updateOne(eq("nasJury", idJury), set("proces_id", procesArg.getId()));
     }
 }

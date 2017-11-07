@@ -55,12 +55,12 @@ public class TableAvocat
     /**
      * Vérifie si l'avocat existe
      * 
-     * @param avocat
+     * @param avocat_id
      * @return boolean
      */
-    public boolean existe(Avocat avocat)
+    public boolean existe(int avocat_id)
     {
-        return avocatCollection.find(eq("id", avocat.getId())).first() != null;
+        return avocatCollection.find(eq("id", avocat_id)).first() != null;
     }
 
     /**

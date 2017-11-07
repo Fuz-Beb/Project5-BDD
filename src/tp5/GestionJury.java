@@ -40,18 +40,13 @@ public class GestionJury
     {
         try
         {
-            cx.getConnection().getTransaction().begin();
-
             if (jury.existe(juryArg))
                 throw new IFT287Exception("Jury existe déjà : " + juryArg.getNas());
             jury.ajouter(juryArg);
-
-            cx.getConnection().getTransaction().commit();
         }
-        finally
+        catch (Exception e)
         {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
+            throw e;
         }
     }
 

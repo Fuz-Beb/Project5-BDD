@@ -19,13 +19,13 @@ public class Avocat
     public Avocat()
     {
     }
-    
+
     /**
      * Constructeur de confort
      * 
      * @param a
      */
-    public Avocat(Document a) 
+    public Avocat(Document a)
     {
         this(a.getInteger("id"), a.getString("prenom"), a.getString("nom"), a.getInteger("type"));
     }
@@ -124,12 +124,14 @@ public class Avocat
     {
         this.type = type;
     }
-    
+
+    /**
+     * Retourne l'objet courant sous forme de document
+     * 
+     * @return Document
+     */
     public Document toDocument()
     {
-        return new Document().append("id", id)
-                             .append("prenom", prenom)
-                             .append("nom", nom)
-                             .append("type", type);
+        return new Document().append("id", id).append("prenom", prenom).append("nom", nom).append("type", type);
     }
 }

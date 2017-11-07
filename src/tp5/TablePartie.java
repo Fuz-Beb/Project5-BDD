@@ -1,14 +1,16 @@
 package tp5;
 
-import javax.persistence.TransactionRequiredException;
-import javax.persistence.TypedQuery;
+import org.bson.Document;
+
+import com.mongodb.client.MongoCollection;
+import static com.mongodb.client.model.Filters.eq;
 
 /**
  * Permet d'effectuer les accès à la table partie.
  */
 public class TablePartie
 {
-    private TypedQuery<Partie> stmtExiste;
+    private MongoCollection<Document> partieCollection;
     private Connexion cx;
 
     /**
@@ -20,7 +22,7 @@ public class TablePartie
     public TablePartie(Connexion cx)
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select p from Partie p where p.id = :id", Partie.class);
+        partieCollection = cx.getDatabase().getCollection("Partie");
     }
 
     /**
@@ -38,37 +40,36 @@ public class TablePartie
      * 
      * @param id
      * @return Partie
-     * @throws Exception
      */
-    public Partie getPartie(int id) throws Exception
+    public Partie getPartie(int id)
     {
-        stmtExiste.setParameter("id", id);
-        return stmtExiste.getSingleResult();
+        Document p = partieCollection.find(eq("id", id)).first();
+        if (p != null)
+        {
+            return new Partie(p);
+        }
+
+        return null;
     }
 
     /**
      * Vérifie si un partie existe.
      * 
-     * @param partie
+     * @param partie_id
      * @return boolean
      */
-    public boolean existe(Partie partie)
+    public boolean existe(int partie_id)
     {
-        stmtExiste.setParameter("id", partie.getId());
-        return !stmtExiste.getResultList().isEmpty();
+        return partieCollection.find(eq("id", partie_id)).first() != null;
     }
 
     /**
      * Ajout d'un nouveau partie
      * 
      * @param partie
-     * @return Partie
-     * @throws IllegalArgumentException
-     * @throws TransactionRequiredException
      */
-    public Partie ajout(Partie partie) throws IllegalArgumentException, TransactionRequiredException
+    public void ajout(Partie partie)
     {
-        cx.getConnection().persist(partie);
-        return partie;
+        partieCollection.insertOne(partie.toDocument());
     }
 }
