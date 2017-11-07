@@ -1,18 +1,13 @@
 package tp5;
 
-import javax.persistence.*;
+import org.bson.Document;
 
 /**
  * Permet de représenter un tuple de la table avocat.
  */
 
-@Entity
 public class Avocat
 {
-    @Id
-    @GeneratedValue
-    private long m_id;
-
     private int id;
     private String prenom;
     private String nom;
@@ -23,6 +18,16 @@ public class Avocat
      */
     public Avocat()
     {
+    }
+    
+    /**
+     * Constructeur de confort
+     * 
+     * @param a
+     */
+    public Avocat(Document a) 
+    {
+        this(a.getInteger("id"), a.getString("prenom"), a.getString("nom"), a.getInteger("type"));
     }
 
     /**
@@ -118,5 +123,13 @@ public class Avocat
     public void setType(int type)
     {
         this.type = type;
+    }
+    
+    public Document toDocument()
+    {
+        return new Document().append("id", id)
+                             .append("prenom", prenom)
+                             .append("nom", nom)
+                             .append("type", type);
     }
 }

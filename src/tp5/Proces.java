@@ -5,29 +5,19 @@ package tp5;
 
 import java.sql.Date;
 
-import javax.persistence.*;
-
 /**
  * Permet de représenter un tuple de la table proces.
  *
  */
 
-@Entity
 public class Proces
 {
-    @Id
-    @GeneratedValue
-    private long m_id;
-    
     private int id;    
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Juge juge;
+    private int juge_id;
     private Date date;
     private int devantJury;
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Partie partieDefenderesse;
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Partie partiePoursuivant;
+    private int partieDefenderesse_id;
+    private int partiePoursuivant_id;
     private String decision;
 
     /**
@@ -54,18 +44,18 @@ public class Proces
      * @param juge
      * @param date
      * @param devantJury
-     * @param partieDefenderesse
-     * @param partiePoursuivant
+     * @param partieDefenderesse 
+     * @param partiePoursuivant 
      */
     public Proces(int id, Juge juge, Date date, int devantJury, Partie partieDefenderesse,
             Partie partiePoursuivant)
     {
         this(id);
-        this.juge = juge;
+        this.juge_id = juge.getId();
         this.date = date;
         this.devantJury = devantJury;
-        this.partieDefenderesse = partieDefenderesse;
-        this.partiePoursuivant = partiePoursuivant;
+        this.partieDefenderesse_id = partieDefenderesse.getId();
+        this.partiePoursuivant_id = partiePoursuivant.getId();
     }
 
     /**
@@ -79,9 +69,9 @@ public class Proces
     /**
      * @return the juge
      */
-    public Juge getJuge()
+    public int getJuge()
     {
-        return juge;
+        return juge_id;
     }
     
     /**
@@ -101,19 +91,19 @@ public class Proces
     }
 
     /**
-     * @return the partieDefenderesse
+     * @return the partieDefenderesse_id
      */
-    public Partie getPartieDefenderesse()
+    public int getPartieDefenderesse()
     {
-        return partieDefenderesse;
+        return partieDefenderesse_id;
     }
 
     /**
-     * @return the partiePoursuivant
+     * @return the partiePoursuivant_id
      */
-    public Partie getPartiePoursuivant()
+    public int getPartiePoursuivant()
     {
-        return partiePoursuivant;
+        return partiePoursuivant_id;
     }
 
     /**

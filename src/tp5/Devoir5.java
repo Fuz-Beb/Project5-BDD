@@ -209,9 +209,9 @@ public class Devoir5
 
                     System.out.println("Affichage du proces " + proces.getId());
 
-                    System.out.println(proces.getId() + "\t" + proces.getJuge().getId() + "\t" + proces.getDate() + "\t"
-                            + proces.getDevantJury() + "\t" + proces.getPartieDefenderesse().getId() + "\t"
-                            + proces.getPartiePoursuivant().getId());
+                    System.out.println(proces.getId() + "\t" + proces.getId() + "\t" + proces.getDate() + "\t"
+                            + proces.getDevantJury() + "\t" + proces.getPartieDefenderesse() + "\t"
+                            + proces.getPartiePoursuivant());
 
                     seance = gestionJustice.getGestionSeance().affichage(proces.getId());
 

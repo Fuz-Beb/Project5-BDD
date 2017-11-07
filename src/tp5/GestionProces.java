@@ -137,19 +137,19 @@ public class GestionProces
             if (proces.existe(procesArg.getId()))
                 throw new IFT287Exception("Le proces " + procesArg.getId() + " existe déjà.");
             // Vérification que l'id du juge est correcte
-            if (!juge.existe(procesArg.getJuge().getId()))
-                throw new IFT287Exception("Le juge " + procesArg.getJuge().getId() + " n'existe pas.");
-            if (!partie.existe(new Partie(procesArg.getPartieDefenderesse().getId())))
+            if (!juge.existe(procesArg.getId()))
+                throw new IFT287Exception("Le juge " + procesArg.getId() + " n'existe pas.");
+            if (!partie.existe(new Partie(procesArg.getPartieDefenderesse())))
                 throw new IFT287Exception(
-                        "La partie defenderesse " + procesArg.getPartieDefenderesse().getId() + " n'existe pas.");
-            if (!partie.existe(new Partie(procesArg.getPartiePoursuivant().getId())))
+                        "La partie defenderesse " + procesArg.getPartieDefenderesse() + " n'existe pas.");
+            if (!partie.existe(new Partie(procesArg.getPartiePoursuivant())))
                 throw new IFT287Exception(
-                        "La partie poursuivante " + procesArg.getPartiePoursuivant().getId() + " n'existe pas.");
+                        "La partie poursuivante " + procesArg.getPartiePoursuivant() + " n'existe pas.");
 
             proces.creer(procesArg);
 
             // Rendre le juge non disponible
-            if (!juge.changerDisponibilite(false, procesArg.getJuge().getId()))
+            if (!juge.changerDisponibilite(false, procesArg.getId()))
                 throw new IFT287Exception("Erreur dans le changement");
 
             cx.getConnection().getTransaction().commit();

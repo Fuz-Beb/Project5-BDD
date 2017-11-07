@@ -1,22 +1,15 @@
 package tp5;
 
 import java.sql.Date;
-import javax.persistence.*;
 
 /**
  * Permet de représenter un tuple de la table seance.
  */
 
-@Entity
 public class Seance
 {
-    @Id
-    @GeneratedValue
-    private long m_id;
-    
     private int id;
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Proces proces;
+    private int proces_id;
     private Date date;
 
     /**
@@ -46,7 +39,7 @@ public class Seance
     public Seance(int id, Proces proces, Date date)
     {
         this(id);
-        this.proces = proces;
+        this.proces_id = proces.getId();
         this.date = date;
     }
 
@@ -70,17 +63,17 @@ public class Seance
     /**
      * @return Proces
      */
-    public Proces getProces()
+    public int getProces()
     {
-        return proces;
+        return proces_id;
     }
 
     /**
      * @param proces
      */
-    public void setProces(Proces proces)
+    public void setProces(int proces)
     {
-        this.proces = proces;
+        this.proces_id = proces;
     }
 
     /**

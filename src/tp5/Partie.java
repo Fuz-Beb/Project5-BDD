@@ -1,24 +1,16 @@
 package tp5;
 
-import javax.persistence.*;
-
 /**
  * Permet de représenter un tuple de la table partie.
  *
  */
 
-@Entity
 public class Partie
 {
-    @Id
-    @GeneratedValue
-    private long m_id;
-    
     private int id;    
     private String prenom;
     private String nom;
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Avocat avocat;
+    private int avocat_id;
 
     /**
      * Constructeur par défaut
@@ -40,7 +32,7 @@ public class Partie
         this.id = id;
         this.prenom = prenom;
         this.nom = nom;
-        this.avocat = avocat;
+        this.avocat_id = avocat.getId();
     }
 
     /**
@@ -107,17 +99,17 @@ public class Partie
     /**
      * @return avocat
      */
-    public Avocat getAvocat()
+    public int getAvocat()
     {
-        return avocat;
+        return avocat_id;
     }
 
     /**
      * @param avocat
      *            the avocat_id to set
      */
-    public void setAvocat(Avocat avocat)
+    public void setAvocat(int avocat)
     {
-        this.avocat = avocat;
+        this.avocat_id = avocat;
     }
 }
