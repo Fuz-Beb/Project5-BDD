@@ -34,26 +34,20 @@ public class GestionJuge
      * Ajout d'un nouveau juge dans la base de données
      * 
      * @param jugeArg
-     * 
-     * @throws Exception
+     * @throws IFT287Exception
      */
-    public void ajouter(Juge jugeArg) throws Exception
+    public void ajouter(Juge jugeArg) throws IFT287Exception
     {
         try
         {
-            cx.getConnection().getTransaction().begin();
-
             if (juge.existe(jugeArg.getId()))
                 throw new IFT287Exception("Le juge existe déjà : " + jugeArg.getId());
 
             juge.ajouter(jugeArg);
-
-            cx.getConnection().getTransaction().commit();
         }
-        finally
+        catch (IFT287Exception e)
         {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
+            throw e;
         }
     }
 
@@ -92,20 +86,15 @@ public class GestionJuge
     {
         try
         {
-            cx.getConnection().getTransaction().begin();
-
             if (!juge.existe(id))
                 throw new IFT287Exception("Juge inexistant : " + id);
             if (proces.jugeEnCours(id))
                 throw new IFT287Exception("Le juge " + id + " n'a pas terminé tout ses procès");
             juge.retirer(id);
-
-            cx.getConnection().getTransaction().commit();
         }
-        finally
+        catch (IFT287Exception e)
         {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
+            throw e;
         }
     }
 
@@ -118,21 +107,13 @@ public class GestionJuge
      */
     public Juge getJuge(int id) throws Exception
     {
-        Juge list = null;
         try
         {
-            cx.getConnection().getTransaction().begin();
-
-            list = juge.getJuge(id);
-
-            cx.getConnection().getTransaction().commit();
-
-            return list;
+            return juge.getJuge(id);
         }
-        finally
+        catch (Exception e)
         {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
+            throw e;
         }
     }
 }

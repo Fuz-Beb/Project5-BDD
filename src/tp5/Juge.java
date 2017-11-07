@@ -1,5 +1,7 @@
 package tp5;
 
+import org.bson.Document;
+
 /**
  * Permet de représenter un tuple de la table juge.
  */
@@ -18,6 +20,13 @@ public class Juge
      */
     public Juge()
     {
+    }
+
+    public Juge(Document a)
+    {
+        this(a.getInteger("id"), a.getString("prenom"), a.getString("nom"), a.getInteger("age"));
+        this.disponible = a.getBoolean("disponible");
+        this.quitterJustice = a.getBoolean("quitterJustice");
     }
 
     /**
@@ -138,5 +147,16 @@ public class Juge
     public void setQuitterJustice(boolean quitterJustice)
     {
         this.quitterJustice = quitterJustice;
+    }
+
+    /**
+     * Retourne l'objet courant sous forme de document
+     * 
+     * @return un document juge
+     */
+    public Document toDocument()
+    {
+        return new Document().append("id", id).append("prenom", prenom).append("nom", nom).append("age", age)
+                .append("disponible", disponible).append("quitterJustice", quitterJustice);
     }
 }

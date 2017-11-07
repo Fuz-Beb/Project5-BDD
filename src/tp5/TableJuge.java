@@ -2,30 +2,30 @@ package tp5;
 
 import java.util.List;
 
-import javax.persistence.TransactionRequiredException;
-import javax.persistence.TypedQuery;
+import org.bson.Document;
+
+import com.mongodb.client.MongoCollection;
+import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.set;
+import static com.mongodb.client.model.Updates.combine;
 
 /**
- * Permet d'effectuer les accès à la table juge.
+ * Permet d'effectuer les accès à la collection juge
  */
 public class TableJuge
 {
+    private MongoCollection<Document> jugeCollection;
     private Connexion cx;
-    private TypedQuery<Juge> stmtExiste;
-    private TypedQuery<Juge> stmtSelect;
-    private TypedQuery<Juge> quitterJusticeJuge;
 
     /**
-     * Création d'une instance. Des énoncés SQL pour chaque requête sont
-     * précompilés.
+     * Création d'une instance de Juge
      * 
      * @param cx
      */
     public TableJuge(Connexion cx)
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select j from Juge j where j.id = :idJuge", Juge.class);
-        stmtSelect = cx.getConnection().createQuery("select j from Juge j where j.disponible = true", Juge.class);
+        jugeCollection = cx.getDatabase().getCollection("Juge");
     }
 
     /**
@@ -47,8 +47,12 @@ public class TableJuge
      */
     public Juge getJuge(int id) throws Exception
     {
-        stmtExiste.setParameter("idJuge", id);
-        return stmtExiste.getSingleResult();
+        Document a = jugeCollection.find(eq("id", id)).first();
+        if (a != null)
+        {
+            return new Juge(a);
+        }
+        return null;
     }
 
     /**
@@ -59,8 +63,7 @@ public class TableJuge
      */
     public boolean existe(int id)
     {
-        stmtExiste.setParameter("idJuge", id);
-        return !stmtExiste.getResultList().isEmpty();
+        return jugeCollection.find(eq("id", id)).first() != null;
     }
 
     /**
@@ -81,10 +84,9 @@ public class TableJuge
      * @throws IllegalArgumentException
      * @throws TransactionRequiredException
      */
-    public Juge ajouter(Juge juge) throws IllegalArgumentException, TransactionRequiredException
+    public void ajouter(Juge juge)
     {
-        cx.getConnection().persist(juge);
-        return juge;
+        jugeCollection.insertOne(juge.toDocument());
     }
 
     /**
@@ -93,17 +95,9 @@ public class TableJuge
      * @param id
      * @return vrai si suppresion OK sinon faux
      */
-    public boolean retirer(int id)
+    public void retirer(int id)
     {
-        quitterJusticeJuge = cx.getConnection().createQuery(
-                "update Juge j SET quitterJustice = true, disponible = false where j.id = :id", Juge.class);
-        quitterJusticeJuge.setParameter("id", id);
-
-        // Si on a bien effectué les modifications alors on retourne vrai
-        if (quitterJusticeJuge.executeUpdate() == 1)
-            return true;
-
-        return false;
+        jugeCollection.updateOne(eq("id", id), combine(set("disponible", false), set("quitterJustice", true)));
     }
 
     /**
@@ -113,19 +107,8 @@ public class TableJuge
      * @param id
      * @return boolean
      */
-    public boolean changerDisponibilite(boolean disponible, int id)
+    public void changerDisponibilite(boolean disponible, int id)
     {
-        TypedQuery<Juge> changerDisponibiliteJuge = cx.getConnection()
-                .createQuery("update Juge j SET j.disponible = :disponibilite where j.id = :id", Juge.class);
-        changerDisponibiliteJuge.setParameter("id", id);
-        changerDisponibiliteJuge.setParameter("disponibilite", disponible);
-
-        // Si on a bien effectué les modifications alors on retourne vrai
-        if (changerDisponibiliteJuge.executeUpdate() == 1)
-        {
-            return true;
-        }
-
-        return false;
+        jugeCollection.updateOne(eq("id", id), set("disponible", disponible));
     }
 }
