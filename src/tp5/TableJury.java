@@ -90,11 +90,11 @@ public class TableJury
     /**
      * Assigner un proces à un jury
      * 
-     * @param procesArg
+     * @param proces_id
      * @param idJury
      */
-    public void assignerProces(int idJury, Proces procesArg)
+    public void assignerProces(int idJury, int proces_id)
     {
-        juryCollection.updateOne(eq("nasJury", idJury), set("proces_id", procesArg.getId()));
+        juryCollection.updateOne(eq("nasJury", idJury), set("proces_id", proces_id));
     }
 }

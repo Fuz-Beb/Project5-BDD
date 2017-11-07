@@ -27,7 +27,7 @@ public class GestionAvocat
     {
         try
         {
-            if (avocat.existe(avocatArg))
+            if (avocat.existe(avocatArg.getId()))
                 throw new IFT287Exception("L'avocat existe déjà : " + avocatArg.getId());
 
             avocat.ajouter(avocatArg);

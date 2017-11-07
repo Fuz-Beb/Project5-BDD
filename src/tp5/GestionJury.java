@@ -3,66 +3,67 @@ package tp5;
 import java.util.List;
 
 /**
- * Gestion des transactions de la table jury.
+ * Gestion des transaction de la table juge.
  */
-public class GestionJury
+public class GestionJuge
 {
-    private TableJury jury;
+    private TableJuge juge;
     private TableProces proces;
     private Connexion cx;
 
     /**
      * Constructeur de confort
      * 
-     * @param jury
+     * @param juge
      * @param proces
      * @throws IFT287Exception
      */
-    public GestionJury(TableJury jury, TableProces proces) throws IFT287Exception
+    public GestionJuge(TableJuge juge, TableProces proces) throws IFT287Exception
     {
-        this.cx = jury.getConnexion();
+        this.cx = juge.getConnexion();
 
-        if (jury.getConnexion() != proces.getConnexion())
+        if (juge.getConnexion() != proces.getConnexion())
             throw new IFT287Exception(
                     "Les instances de juge et de proces n'utilisent pas la même connexion au serveur");
 
-        this.jury = jury;
+        this.juge = juge;
         this.proces = proces;
     }
 
     /**
-     * Ajout d'une jury dans la base de données
+     * Ajout d'un nouveau juge dans la base de données
      * 
-     * @param juryArg
-     * @throws Exception
+     * @param jugeArg
+     * @throws IFT287Exception
      */
-    public void ajouter(Jury juryArg) throws Exception
+    public void ajouter(Juge jugeArg) throws IFT287Exception
     {
         try
         {
-            if (jury.existe(juryArg))
-                throw new IFT287Exception("Jury existe déjà : " + juryArg.getNas());
-            jury.ajouter(juryArg);
+            if (juge.existe(jugeArg.getId()))
+                throw new IFT287Exception("Le juge existe déjà : " + jugeArg.getId());
+
+            juge.ajouter(jugeArg);
         }
-        catch (Exception e)
+        catch (IFT287Exception e)
         {
             throw e;
         }
     }
 
     /**
-     * Afficher la liste des jurys
+     * Afficher la liste des juges actifs et disponibles
      * 
-     * @return List<Jury>
+     * @return List<Juge>
      */
-    public List<Jury> affichage()
+    public List<Juge> affichage()
     {
-        List<Jury> list = null;
+        List<Juge> list = null;
         try
         {
             cx.getConnection().getTransaction().begin();
 
-            list = jury.affichage();
+            list = juge.affichage();
 
             cx.getConnection().getTransaction().commit();
 
@@ -76,59 +77,43 @@ public class GestionJury
     }
 
     /**
-     * Assigner un proces à un jury
-     * 
-     * @param idJury
-     * @param procesArg
-     * @throws IFT287Exception
-     */
-    public void assignerProces(int idJury, Proces procesArg) throws IFT287Exception
-    {
-        try
-        {
-            cx.getConnection().getTransaction().begin();
-
-            if (!proces.existe(procesArg.getId()))
-                throw new IFT287Exception("Proces n'existe pas : " + procesArg.getId());
-            if (!proces.devantJury(procesArg.getId()))
-                throw new IFT287Exception("Le proces " + procesArg.getId() + "doit se tenir devant un juge seul");
-
-            if (!jury.assignerProces(idJury, procesArg))
-                throw new IFT287Exception("L'assignation du proces " + procesArg.getId() + " au jury " + idJury + " a échoué");
-
-            cx.getConnection().getTransaction().commit();
-        }
-        finally
-        {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
-        }
-    }
-
-    /**
-     * Retourne le jury demandé et reçu par TableJury
+     * Retirer un juge
      * 
      * @param id
-     * @return Jury
-     * @throws Exception
+     * @throws IFT287Exception
      */
-    public Jury getJury(int id) throws Exception
+    public void retirer(int id) throws IFT287Exception
     {
-        Jury list = null;
         try
         {
-            cx.getConnection().getTransaction().begin();
-
-            list = jury.getJury(id);
-
-            cx.getConnection().getTransaction().commit();
-
-            return list;
+            if (!juge.existe(id))
+                throw new IFT287Exception("Juge inexistant : " + id);
+            if (proces.jugeEnCours(id))
+                throw new IFT287Exception("Le juge " + id + " n'a pas terminé tout ses procès");
+            juge.retirer(id);
         }
-        finally
+        catch (IFT287Exception e)
         {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
+            throw e;
+        }
+    }
+
+    /**
+     * Retourne le juge demandé et reçu par TableJuge
+     * 
+     * @param id
+     * @return Juge
+     * @throws Exception
+     */
+    public Juge getJuge(int id) throws Exception
+    {
+        try
+        {
+            return juge.getJuge(id);
+        }
+        catch (Exception e)
+        {
+            throw e;
         }
     }
 }

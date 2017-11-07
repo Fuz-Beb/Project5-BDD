@@ -9,7 +9,6 @@ public class GestionSeance
 {
     private TableSeance seance;
     private TableProces proces;
-    private Connexion cx;
 
     /**
      * Constructeur de confort
@@ -20,7 +19,7 @@ public class GestionSeance
      */
     public GestionSeance(TableSeance seance, TableProces proces) throws IFT287Exception
     {
-        this.cx = seance.getConnexion();
+        seance.getConnexion();
         if (seance.getConnexion() != proces.getConnexion())
             throw new IFT287Exception(
                     "Les instances de TableSeance et de TableProces n'utilisent pas la même connexion au serveur");
@@ -33,35 +32,23 @@ public class GestionSeance
      * une exception est levée.
      * 
      * @param seanceArg
-     * @throws Exception
+     * @throws IFT287Exception
      */
-    public void ajout(Seance seanceArg) throws Exception
+    public void ajout(Seance seanceArg) throws IFT287Exception
     {
-        try
-        {
-            cx.getConnection().getTransaction().begin();
+        // Vérification si la seance existe deja
+        if (seance.existe(seanceArg.getId()))
+            throw new IFT287Exception("La seance existe deja: " + seanceArg.getId());
 
-            // Vérification si la seance existe deja
-            if (seance.existe(seanceArg.getId()))
-                throw new IFT287Exception("La seance existe deja: " + seanceArg.getId());
+        // Verification si le proces existe
+        if (!proces.existe(seanceArg.getProces()))
+            throw new IFT287Exception("Le proces " + seanceArg.getProces() + " n'existe pas.");
 
-            // Verification si le proces existe
-            if (!proces.existe(seanceArg.getProces().getId()))
-                throw new IFT287Exception("Le proces " + seanceArg.getProces().getId() + " n'existe pas.");
+        // Verification si le proces specifie n'est pas termine
+        if (!proces.verifierProcesTermine(seanceArg.getProces()))
+            throw new IFT287Exception("Le proces " + seanceArg.getProces() + " est termine.");
 
-            // Verification si le proces specifie n'est pas termine
-            if (!proces.verifierProcesTermine(new Proces(seanceArg.getProces().getId())))
-                throw new IFT287Exception("Le proces " + seanceArg.getProces().getId() + " est termine.");
-
-            seance.ajout(seanceArg);
-
-            cx.getConnection().getTransaction().commit();
-        }
-        finally
-        {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
-        }
+        seance.ajout(seanceArg);
     }
 
     /**
@@ -72,27 +59,15 @@ public class GestionSeance
      */
     public void supprimer(Seance seanceArg) throws Exception
     {
-        try
-        {
-            cx.getConnection().getTransaction().begin();
+        // Vérification si la seance existe
+        if (!seance.existe(seanceArg.getId()))
+            throw new IFT287Exception("La seance n'existe pas : " + seanceArg);
 
-            // Vérification si la seance existe
-            if (!seance.existe(seanceArg.getId()))
-                throw new IFT287Exception("La seance n'existe pas : " + seanceArg);
+        // Vérification que la seance n'est pas encore passée
+        if (seance.seancePassee(seanceArg.getId()))
+            throw new IFT287Exception("La seance " + seanceArg + " est déjà passée.");
 
-            // Vérification que la seance n'est pas encore passée
-            if (seance.seancePassee(seanceArg.getId()))
-                throw new IFT287Exception("La seance " + seanceArg + " est déjà passée.");
-
-            seance.supprimer(seanceArg);
-
-            cx.getConnection().getTransaction().commit();
-        }
-        finally
-        {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
-        }
+        seance.supprimer(seanceArg.getId());
     }
 
     /**
@@ -105,50 +80,24 @@ public class GestionSeance
     public List<Seance> affichage(int id) throws IFT287Exception
     {
         List<Seance> list = null;
-        try
-        {
-            cx.getConnection().getTransaction().begin();
-
-            if (!proces.existe(id))
-                throw new IFT287Exception("Le proces " + id + "n'existe pas");
-            else
-                list = seance.affichage(id);
-
-            cx.getConnection().getTransaction().commit();
-
-            return list;
-        }
-        finally
-        {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
-        }
+        if (!proces.existe(id))
+            throw new IFT287Exception("Le proces " + id + "n'existe pas");
+        else
+            list = seance.affichage(id);
+        return list;
     }
-    
+
     /**
      * Retourne le partie demandé et reçu par TableSeance
      * 
      * @param id
      * @return Seance
-     * @throws Exception
      */
-    public Seance getSeance(int id) throws Exception
+    public Seance getSeance(int id)
     {
         Seance list = null;
-        try
-        {
-            cx.getConnection().getTransaction().begin();
+        list = seance.getSeance(id);
 
-            list = seance.getSeance(id);
-
-            cx.getConnection().getTransaction().commit();
-
-            return list;
-        }
-        finally
-        {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
-        }
+        return list;
     }
 }
