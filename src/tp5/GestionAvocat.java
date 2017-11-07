@@ -6,7 +6,6 @@ package tp5;
 public class GestionAvocat
 {
     private TableAvocat avocat;
-    private Connexion cx;
 
     /**
      * Constructeur de confort
@@ -15,7 +14,6 @@ public class GestionAvocat
      */
     public GestionAvocat(TableAvocat avocat)
     {
-        this.cx = avocat.getConnexion();
         this.avocat = avocat;
     }
 
@@ -29,19 +27,14 @@ public class GestionAvocat
     {
         try
         {
-            cx.getConnection().getTransaction().begin();
-
             if (avocat.existe(avocatArg))
                 throw new IFT287Exception("L'avocat existe déjà : " + avocatArg.getId());
 
             avocat.ajouter(avocatArg);
-
-            cx.getConnection().getTransaction().commit();
         }
-        finally
+        catch (Exception e)
         {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
+            throw e;
         }
     }
 
@@ -50,25 +43,12 @@ public class GestionAvocat
      * 
      * @param id
      * @return Avocat
-     * @throws Exception
      */
-    public Avocat getAvocat(int id) throws Exception
+    public Avocat getAvocat(int id)
     {
-        Avocat list = null;
-        try
-        {
-            cx.getConnection().getTransaction().begin();
+        Avocat avocatObj = null;
+        avocatObj = avocat.getAvocat(id);
 
-            list = avocat.getAvocat(id);
-
-            cx.getConnection().getTransaction().commit();
-
-            return list;
-        }
-        finally
-        {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
-        }
+        return avocatObj;
     }
 }
