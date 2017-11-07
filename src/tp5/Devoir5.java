@@ -151,16 +151,13 @@ public class Devoir5
                 {
                     // Appel de la methode qui traite la transaction specifique
                     gestionJustice.getGestionPartie().ajout(new Partie(readInt(tokenizer), readString(tokenizer),
-                            readString(tokenizer), gestionJustice.getGestionAvocat().getAvocat(readInt(tokenizer))));
+                            readString(tokenizer), readInt(tokenizer)));
                 }
                 else if (command.equals("creerProces"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionProces()
-                            .creer(new Proces(readInt(tokenizer),
-                                    gestionJustice.getGestionJuge().getJuge(readInt(tokenizer)), readDate(tokenizer),
-                                    readInt(tokenizer), gestionJustice.getGestionPartie().getPartie(readInt(tokenizer)),
-                                    gestionJustice.getGestionPartie().getPartie(readInt(tokenizer))));
+                    gestionJustice.getGestionProces().creer(new Proces(readInt(tokenizer), readInt(tokenizer),
+                            readDate(tokenizer), readInt(tokenizer), readInt(tokenizer), readInt(tokenizer)));
                 }
                 else if (command.equals("inscrireJury"))
                 {
@@ -171,18 +168,18 @@ public class Devoir5
                 else if (command.equals("assignerJury"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionJury().assignerProces(readInt(tokenizer), gestionJustice.getGestionProces().getProces(readInt(tokenizer)));
+                    gestionJustice.getGestionJury().assignerProces(readInt(tokenizer), readInt(tokenizer));
                 }
                 else if (command.equals("ajouterSeance"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionSeance().ajout(new Seance(readInt(tokenizer),
-                            gestionJustice.getGestionProces().getProces(readInt(tokenizer)), readDate(tokenizer)));
+                    gestionJustice.getGestionSeance()
+                            .ajout(new Seance(readInt(tokenizer), readInt(tokenizer), readDate(tokenizer)));
                 }
                 else if (command.equals("supprimerSeance"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionSeance().supprimer(gestionJustice.getGestionSeance().getSeance(readInt(tokenizer)));
+                    gestionJustice.getGestionSeance().supprimer(readInt(tokenizer));
                 }
                 else if (command.equals("terminerProces"))
                 {
