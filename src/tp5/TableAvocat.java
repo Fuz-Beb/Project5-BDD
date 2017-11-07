@@ -58,15 +58,9 @@ public class TableAvocat
      * @param avocat_id
      * @return boolean
      */
-<<<<<<< HEAD
     public boolean existe(int avocat_id)
     {
         return avocatCollection.find(eq("id", avocat_id)).first() != null;
-=======
-    public boolean existe(int id)
-    {
-        return avocatCollection.find(eq("id", id)).first() != null;
->>>>>>> 14e670544909b888b2acf62cf901dd7383c2a8f6
     }
 
     /**
