@@ -1,21 +1,21 @@
 package tp5;
 
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.TransactionRequiredException;
-import javax.persistence.TypedQuery;
+import org.bson.Document;
+
+import com.mongodb.client.MongoCollection;
+import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.set;
+import static com.mongodb.client.model.Updates.combine;
 
 /**
  * Permet d'effectuer les accès à la table proces.
  */
 public class TableProces
 {
-    private TypedQuery<Proces> stmtExiste;
-    private TypedQuery<Proces> stmtSelectProcesNonTermine;
-    private TypedQuery<Proces> stmtVerificationProcesDecision;
-    private TypedQuery<Proces> stmtProcesJugeEnCours;
-    private TypedQuery<Proces> stmtVerificationProcesDevantJury;
-    private TypedQuery<Juge> stmtSelectJugeDansProces;
+    private MongoCollection<Document> procesCollection;
     private Connexion cx;
 
     /**
@@ -27,17 +27,7 @@ public class TableProces
     public TableProces(Connexion cx)
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select p from Proces p where p.id = :id", Proces.class);
-        stmtSelectProcesNonTermine = cx.getConnection()
-                .createQuery("select p from Proces p where p.id = :id and p.date < CURRENT_DATE", Proces.class);
-        stmtVerificationProcesDecision = cx.getConnection()
-                .createQuery("select p from Proces p where p.id = :id and p.decision is null", Proces.class);
-        stmtProcesJugeEnCours = cx.getConnection()
-                .createQuery("select p from Proces p where p.juge.id = :id and p.decision is null", Proces.class);
-        stmtVerificationProcesDevantJury = cx.getConnection()
-                .createQuery("select p from Proces p where p.id = :id and p.devantJury = 1", Proces.class);
-        stmtSelectJugeDansProces = cx.getConnection().createQuery("select p.juge from Proces p where p.id = :id",
-                Juge.class);
+        procesCollection = cx.getDatabase().getCollection("Proces");
     }
 
     /**
@@ -59,8 +49,12 @@ public class TableProces
      */
     public Proces getProces(int id) throws Exception
     {
-        stmtExiste.setParameter("id", id);
-        return stmtExiste.getSingleResult();
+        Document a = procesCollection.find(eq("id", id)).first();
+        if (a != null)
+        {
+            return new Proces(a);
+        }
+        return null;
     }
 
     /**
@@ -69,10 +63,9 @@ public class TableProces
      * @param id
      * @return boolean
      */
-    public boolean existe(int id)
+    public boolean existe(int idProces)
     {
-        stmtExiste.setParameter("id", id);
-        return !stmtExiste.getResultList().isEmpty();
+        return procesCollection.find(eq("id", idProces)).first() != null;
     }
 
     /**
@@ -94,10 +87,10 @@ public class TableProces
      * @param id
      * @return boolean
      */
-    public boolean compareDate(int id)
+    public boolean compareDate(int idProces)
     {
-        stmtSelectProcesNonTermine.setParameter("id", id);
-        return !stmtSelectProcesNonTermine.getResultList().isEmpty();
+        // A REVOIR
+        return procesCollection.find(combine(eq("id", idProces), lt("date", new Date()))).first() != null;
     }
 
     /**
@@ -107,20 +100,9 @@ public class TableProces
      * @param id
      * @return boolean
      */
-    public boolean terminer(String decision, int id)
+    public void terminer(String decision, int idProces)
     {
-        TypedQuery<Proces> changerDecision = cx.getConnection()
-                .createQuery("update Proces p SET p.decision = :decision where p.id = :id", Proces.class);
-        changerDecision.setParameter("id", id);
-        changerDecision.setParameter("decision", decision);
-
-        // Si on a bien effectué les modifications alors on retourne vrai
-        if (changerDecision.executeUpdate() == 1)
-        {
-            return true;
-        }
-
-        return false;
+        procesCollection.updateOne(eq("id", idProces), set("decision", decision));
     }
 
     /**
@@ -129,19 +111,9 @@ public class TableProces
      * @param id
      * @return int
      */
-    public int getJugeProces(int id)
+    public int getJugeProces(int idProces)
     {
-        List<Juge> idJuge;
-
-        stmtSelectJugeDansProces.setParameter("id", id);
-        idJuge = stmtSelectJugeDansProces.getResultList();
-
-        if (!idJuge.isEmpty())
-        {
-            return idJuge.get(0).getId();
-        }
-
-        return -1;
+        return procesCollection.find(eq("id", idProces)).first().getInteger("juge_id");
     }
 
     /**
@@ -150,10 +122,9 @@ public class TableProces
      * @param id
      * @return boolean
      */
-    public boolean jugeEnCours(int id)
+    public boolean jugeEnCours(int idJuge)
     {
-        stmtProcesJugeEnCours.setParameter("id", id);
-        return !stmtProcesJugeEnCours.getResultList().isEmpty();
+        return procesCollection.find(combine(eq("juge_id", idJuge), eq("decision", null))).first() != null;
     }
 
     /**
@@ -164,22 +135,20 @@ public class TableProces
      * @throws IllegalArgumentException
      * @throws TransactionRequiredException
      */
-    public Proces creer(Proces proces) throws IllegalArgumentException, TransactionRequiredException
+    public void creer(Proces proces)
     {
-        cx.getConnection().persist(proces);
-        return proces;
+        procesCollection.insertOne(proces.toDocument());
     }
 
     /**
      * Verification si le proces specifie n'est pas termine
      * 
-     * @param proces
+     * @param idProces
      * @return boolean
      */
-    public boolean verifierProcesTermine(Proces proces)
+    public boolean verifierProcesTermine(int idProces)
     {
-        stmtVerificationProcesDecision.setParameter("id", proces.getId());
-        return !stmtVerificationProcesDecision.getResultList().isEmpty();
+        return procesCollection.find(combine(eq("id", idProces), eq("decision", null))).first() != null;
     }
 
     /**
@@ -190,7 +159,6 @@ public class TableProces
      */
     public boolean devantJury(int idProces)
     {
-        stmtVerificationProcesDevantJury.setParameter("id", idProces);
-        return !stmtVerificationProcesDevantJury.getResultList().isEmpty();
+        return procesCollection.find(combine(eq("id", idProces), eq("devantJury", 1))).first() != null;
     }
 }

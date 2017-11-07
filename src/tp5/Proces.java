@@ -3,7 +3,9 @@
  */
 package tp5;
 
-import java.sql.Date;
+import java.util.Date;
+
+import org.bson.Document;
 
 /**
  * Permet de représenter un tuple de la table proces.
@@ -12,7 +14,7 @@ import java.sql.Date;
 
 public class Proces
 {
-    private int id;    
+    private int id;
     private int juge_id;
     private Date date;
     private int devantJury;
@@ -27,35 +29,32 @@ public class Proces
     {
     }
 
-    /**
-     * Constructeur de confort
-     * 
-     * @param id
-     */
-    public Proces(int id)
+    public Proces(Document a)
     {
-        this.id = id;
+        this(a.getInteger("id"), a.getInteger("juge_id"), a.getDate("date"), a.getInteger("devantJury"),
+                a.getInteger("partieDefenderesse_id"), a.getInteger("partiePoursuivant_id"));
+
+        this.decision = a.getString("decision");
     }
 
     /**
      * Constructeur de confort
      * 
      * @param id
-     * @param juge
+     * @param juge_id
      * @param date
      * @param devantJury
-     * @param partieDefenderesse 
-     * @param partiePoursuivant 
+     * @param partieDefenderesse_id
+     * @param partiePoursuivant_id
      */
-    public Proces(int id, Juge juge, Date date, int devantJury, Partie partieDefenderesse,
-            Partie partiePoursuivant)
+    public Proces(int id, int juge_id, Date date, int devantJury, int partieDefenderesse_id, int partiePoursuivant_id)
     {
-        this(id);
-        this.juge_id = juge.getId();
+        this.id = id;
+        this.juge_id = juge_id;
         this.date = date;
         this.devantJury = devantJury;
-        this.partieDefenderesse_id = partieDefenderesse.getId();
-        this.partiePoursuivant_id = partiePoursuivant.getId();
+        this.partieDefenderesse_id = partieDefenderesse_id;
+        this.partiePoursuivant_id = partiePoursuivant_id;
     }
 
     /**
@@ -73,7 +72,7 @@ public class Proces
     {
         return juge_id;
     }
-    
+
     /**
      * @return the date
      */
@@ -112,5 +111,12 @@ public class Proces
     public String getDecision()
     {
         return decision;
+    }
+
+    public Document toDocument()
+    {
+        return new Document().append("id", id).append("juge_id", juge_id).append("date", date)
+                .append("devantJury", devantJury).append("partieDefenderesse_id", partieDefenderesse_id)
+                .append("partiePoursuivant_id", partiePoursuivant_id);
     }
 }

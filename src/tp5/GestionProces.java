@@ -81,8 +81,6 @@ public class GestionProces
     {
         try
         {
-            cx.getConnection().getTransaction().begin();
-
             int idJuge = 0;
 
             // Verification de la valeur de la decision
@@ -106,14 +104,10 @@ public class GestionProces
                 juge.changerDisponibilite(true, idJuge);
 
             seance.supprimerSeancesProcesTermine(id);
-
-            cx.getConnection().getTransaction().commit();
-
         }
-        finally
+        catch(IFT287Exception e)
         {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
+            throw e;
         }
     }
 
@@ -127,8 +121,6 @@ public class GestionProces
     {
         try
         {
-            cx.getConnection().getTransaction().begin();
-
             if (procesArg.getDevantJury() != 0 && procesArg.getDevantJury() != 1)
                 throw new IFT287Exception("Impossible de creer le proces " + procesArg.getId()
                         + "car le champ devantJury ne peut être que 0 ou 1");
@@ -149,15 +141,11 @@ public class GestionProces
             proces.creer(procesArg);
 
             // Rendre le juge non disponible
-            if (!juge.changerDisponibilite(false, procesArg.getId()))
-                throw new IFT287Exception("Erreur dans le changement");
-
-            cx.getConnection().getTransaction().commit();
+            juge.changerDisponibilite(false, procesArg.getId());
         }
-        finally
+        catch (Exception e)
         {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
+            throw e;
         }
     }
 
@@ -170,21 +158,13 @@ public class GestionProces
      */
     public Proces getProces(int id) throws Exception
     {
-        Proces list = null;
         try
         {
-            cx.getConnection().getTransaction().begin();
-
-            list = proces.getProces(id);
-
-            cx.getConnection().getTransaction().commit();
-
-            return list;
+            return proces.getProces(id);
         }
-        finally
+        catch(Exception e)
         {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
+            throw e;
         }
     }
 }
