@@ -1,14 +1,16 @@
 package tp5;
 
-import javax.persistence.TransactionRequiredException;
-import javax.persistence.TypedQuery;
+import org.bson.Document;
+
+import com.mongodb.client.MongoCollection;
+import static com.mongodb.client.model.Filters.*;
 
 /**
  * Permet d'effectuer les accès à la table avocat.
  */
 public class TableAvocat
 {
-    private TypedQuery<Avocat> stmtExiste;
+    private MongoCollection<Document> avocatCollection;
     private Connexion cx;
 
     /**
@@ -20,7 +22,7 @@ public class TableAvocat
     public TableAvocat(Connexion cx)
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select a from Avocat a where a.id = :id", Avocat.class);
+        avocatCollection = cx.getDatabase().getCollection("Avocat");
     }
 
     /**
@@ -38,12 +40,16 @@ public class TableAvocat
      * 
      * @param id
      * @return Avocat
-     * @throws Exception
      */
-    public Avocat getAvocat(int id) throws Exception
+    public Avocat getAvocat(int id)
     {
-        stmtExiste.setParameter("id", id);
-        return stmtExiste.getSingleResult();
+        Document a = avocatCollection.find(eq("id", id)).first();
+        if (a != null)
+        {
+            return new Avocat(a);
+        }
+
+        return null;
     }
 
     /**
@@ -54,21 +60,16 @@ public class TableAvocat
      */
     public boolean existe(Avocat avocat)
     {
-        stmtExiste.setParameter("id", avocat.getId());
-        return !stmtExiste.getResultList().isEmpty();
+        return avocatCollection.find(eq("id", avocat.getId())).first() != null;
     }
 
     /**
      * Ajout d'un nouvelle avocat dans la base de données
      * 
      * @param avocat
-     * @return Avocat
-     * @throws IllegalArgumentException
-     * @throws TransactionRequiredException
      */
-    public Avocat ajouter(Avocat avocat) throws IllegalArgumentException, TransactionRequiredException
+    public void ajouter(Avocat avocat)
     {
-        cx.getConnection().persist(avocat);
-        return avocat;
+        avocatCollection.insertOne(avocat.toDocument());
     }
 }

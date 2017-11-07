@@ -1,25 +1,17 @@
 package tp5;
 
-import javax.persistence.*;
-
 /**
  * Permet de représenter un tuple de la table jury.
  */
 
-@Entity
 public class Jury
 {
-    @Id
-    @GeneratedValue
-    private long m_id;
-
     private int nas;
     private String prenom;
     private String nom;
     private String sexe;
     private int age;
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Proces proces;
+    private int proces_id;
 
     /**
      * Constructeur par défaut
@@ -144,16 +136,16 @@ public class Jury
     /**
      * @return the proces
      */
-    public Proces getProces()
+    public int getProces()
     {
-        return proces;
+        return proces_id;
     }
 
     /**
      * @param proces
      */
-    public void setProces(Proces proces)
+    public void setProces(int proces)
     {
-        this.proces = proces;
+        this.proces_id = proces;
     }
 }

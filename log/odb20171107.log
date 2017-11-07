@@ -90,3 +90,17 @@ New type tp5.Seance
 [2017-11-07 13:52:13 #6 type] 
 Type tp5.Seance is not enhanced.
 
+------------------------------------------------------------------------------------------------------------------------
+
+[2017-11-07 14:36:49 #1 type] 
+Type tp5.Proces is not enhanced.
+
+[2017-11-07 14:36:49 #2 type] 
+Type tp5.Partie is not enhanced.
+
+[2017-11-07 14:36:49 #3 type] 
+Type tp5.Juge is not enhanced.
+
+[2017-11-07 14:36:49 #4 type] 
+Type tp5.Avocat is not enhanced.
+
