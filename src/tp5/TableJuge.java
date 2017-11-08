@@ -76,7 +76,7 @@ public class TableJuge
      */
     public ArrayList<Juge> affichage()
     {
-        MongoCursor<Document> juge = jugeCollection.find().iterator();
+        MongoCursor<Document> juge = jugeCollection.find(combine(eq("quitterJustice", false), eq("disponible", true))).iterator();
         ArrayList<Juge> listeJuges = new ArrayList<Juge>();
 
         while (juge.hasNext())
