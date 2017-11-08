@@ -36,19 +36,26 @@ public class GestionSeance
      */
     public void ajout(Seance seanceArg) throws IFT287Exception
     {
-        // Vérification si la seance existe deja
-        if (seance.existe(seanceArg.getId()))
-            throw new IFT287Exception("La seance existe deja: " + seanceArg.getId());
+        try
+        {
+            // Vérification si la seance existe deja
+            if (seance.existe(seanceArg.getId()))
+                throw new IFT287Exception("La seance existe deja: " + seanceArg.getId());
 
-        // Verification si le proces existe
-        if (!proces.existe(seanceArg.getProces()))
-            throw new IFT287Exception("Le proces " + seanceArg.getProces() + " n'existe pas.");
+            // Verification si le proces existe
+            if (!proces.existe(seanceArg.getProces()))
+                throw new IFT287Exception("Le proces " + seanceArg.getProces() + " n'existe pas.");
 
-        // Verification si le proces specifie n'est pas termine
-        if (!proces.verifierProcesTermine(seanceArg.getProces()))
-            throw new IFT287Exception("Le proces " + seanceArg.getProces() + " est termine.");
+            // Verification si le proces specifie n'est pas termine
+            if (!proces.verifierProcesTermine(seanceArg.getProces()))
+                throw new IFT287Exception("Le proces " + seanceArg.getProces() + " est termine.");
 
-        seance.ajout(seanceArg);
+            seance.ajout(seanceArg);
+        }
+        catch (IFT287Exception e)
+        {
+            throw e;
+        }
     }
 
     /**
@@ -59,15 +66,22 @@ public class GestionSeance
      */
     public void supprimer(Seance seanceArg) throws Exception
     {
-        // Vérification si la seance existe
-        if (!seance.existe(seanceArg.getId()))
-            throw new IFT287Exception("La seance n'existe pas : " + seanceArg);
+        try
+        {
+            // Vérification si la seance existe
+            if (!seance.existe(seanceArg.getId()))
+                throw new IFT287Exception("La seance n'existe pas : " + seanceArg);
 
-        // Vérification que la seance n'est pas encore passée
-        if (seance.seancePassee(seanceArg.getId()))
-            throw new IFT287Exception("La seance " + seanceArg + " est déjà passée.");
+            // Vérification que la seance n'est pas encore passée
+            if (seance.seancePassee(seanceArg.getId()))
+                throw new IFT287Exception("La seance " + seanceArg + " est déjà passée.");
 
-        seance.supprimer(seanceArg.getId());
+            seance.supprimer(seanceArg.getId());
+        }
+        catch (IFT287Exception e)
+        {
+            throw e;
+        }
     }
 
     /**

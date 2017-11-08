@@ -131,10 +131,10 @@ public class GestionProces
             // Vérification que l'id du juge est correcte
             if (!juge.existe(procesArg.getId()))
                 throw new IFT287Exception("Le juge " + procesArg.getId() + " n'existe pas.");
-            if (!partie.existe(new Partie(procesArg.getPartieDefenderesse())))
+            if (!partie.existe(procesArg.getPartieDefenderesse()))
                 throw new IFT287Exception(
                         "La partie defenderesse " + procesArg.getPartieDefenderesse() + " n'existe pas.");
-            if (!partie.existe(new Partie(procesArg.getPartiePoursuivant())))
+            if (!partie.existe(procesArg.getPartiePoursuivant()))
                 throw new IFT287Exception(
                         "La partie poursuivante " + procesArg.getPartiePoursuivant() + " n'existe pas.");
 

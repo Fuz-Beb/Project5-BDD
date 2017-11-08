@@ -7,6 +7,7 @@ public class GestionPartie
 {
     private TablePartie partie;
     private TableAvocat avocat;
+
     /**
      * Constructeur de confort
      * 
@@ -29,20 +30,27 @@ public class GestionPartie
      * exception est levée.
      * 
      * @param partieArg
-     * @throws IFT287Exception 
+     * @throws IFT287Exception
      */
     public void ajout(Partie partieArg) throws IFT287Exception
     {
-        // Vérifie si le partie existe déjà
-        if (partie.existe(partieArg.getId()))
-            throw new IFT287Exception("Partie existe déjà: " + partieArg.getId());
+        try
+        {
+            // Vérifie si le partie existe déjà
+            if (partie.existe(partieArg.getId()))
+                throw new IFT287Exception("Partie existe déjà: " + partieArg.getId());
 
-        // Vérifie si l'avocat existe
-        if (!avocat.existe(partieArg.getAvocat()))
-            throw new IFT287Exception("L'avocat " + partieArg.getAvocat() + "n'existe pas.");
+            // Vérifie si l'avocat existe
+            if (!avocat.existe(partieArg.getAvocat()))
+                throw new IFT287Exception("L'avocat " + partieArg.getAvocat() + "n'existe pas.");
 
-        // Ajout du partie
-        partie.ajout(partieArg);
+            // Ajout du partie
+            partie.ajout(partieArg);
+        }
+        catch (IFT287Exception e)
+        {
+            throw e;
+        }
     }
 
     /**

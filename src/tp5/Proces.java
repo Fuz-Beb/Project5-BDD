@@ -29,6 +29,11 @@ public class Proces
     {
     }
 
+    /**
+     * Constructeur de confort
+     * 
+     * @param a
+     */
     public Proces(Document a)
     {
         this(a.getInteger("id"), a.getInteger("juge_id"), a.getDate("date"), a.getInteger("devantJury"),
@@ -113,6 +118,11 @@ public class Proces
         return decision;
     }
 
+    /**
+     * Retourne l'objet courant sous forme de document
+     * 
+     * @return Document
+     */
     public Document toDocument()
     {
         return new Document().append("id", id).append("juge_id", juge_id).append("date", date)

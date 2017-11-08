@@ -22,6 +22,11 @@ public class Juge
     {
     }
 
+    /**
+     * Constructeur de confort
+     * 
+     * @param a
+     */
     public Juge(Document a)
     {
         this(a.getInteger("id"), a.getString("prenom"), a.getString("nom"), a.getInteger("age"));
