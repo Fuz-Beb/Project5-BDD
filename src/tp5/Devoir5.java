@@ -5,7 +5,6 @@
 package tp5;
 
 import java.io.*;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import java.sql.*;
@@ -198,16 +197,9 @@ public class Devoir5
                 }
                 else if (command.equals("afficherJurys"))
                 {
-                    // Appel de la methode qui traite la transaction specifique
-                    jury = gestionJustice.getGestionJury().affichage();
-
+                    // Appel de la methode qui traite la transaction specifique                    
                     System.out.println("\nListe des jurys disponibles :");
-
-                    for (Jury j : jury)
-                    {
-                        System.out.println(j.getNas() + "\t" + j.getPrenom() + "\t" + j.getNom() + "\t" + j.getSexe()
-                                + "\t" + j.getAge() + "\t" + j.getProces());
-                    }
+                    gestionJustice.getGestionJury().affichage();
                 }
                 else
                 {
