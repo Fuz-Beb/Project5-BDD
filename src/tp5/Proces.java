@@ -29,6 +29,11 @@ public class Proces
     {
     }
 
+    /**
+     * Permet de traduire un document en objet Java
+     * 
+     * @param a
+     */
     public Proces(Document a)
     {
         this(a.getInteger("id"), a.getInteger("juge_id"), a.getDate("date"), a.getInteger("devantJury"),

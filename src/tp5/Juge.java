@@ -22,6 +22,14 @@ public class Juge
     {
     }
 
+    /**
+     * @param a
+     */
+    /**
+     * Permet de traduire un document en objet Java
+     * 
+     * @param a
+     */
     public Juge(Document a)
     {
         this(a.getInteger("id"), a.getString("prenom"), a.getString("nom"), a.getInteger("age"));
