@@ -38,9 +38,9 @@ public class Seance
      */
     public Seance(Document s)
     {
-        this(s.getInteger("id"), (int)s.getInteger("proces_id"), s.getDate("date"));
+        this(s.getInteger("id"), (int) s.getInteger("proces_id"), s.getDate("date"));
     }
-    
+
     /**
      * Constructeur de confort
      * 
@@ -113,5 +113,11 @@ public class Seance
     public Document toDocument()
     {
         return new Document().append("id", id).append("proces_id", proces_id).append("date", date);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Seance [id=" + id + ", proces_id=" + proces_id + ", date=" + date + "]";
     }
 }

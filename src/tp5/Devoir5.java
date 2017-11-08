@@ -109,15 +109,6 @@ public class Devoir5
      */
     static void executerTransaction(String transaction) throws Exception, IFT287Exception
     {
-        // Cette partie va completement changer Attention au getter qui retourne
-        // maintenant un objet et non les id à afficher.
-
-        // Nécessaire pour l'affichage
-        List<Juge> juge;
-        List<Jury> jury;
-        List<Seance> seance;
-        Proces proces;
-
         try
         {
             System.out.println(transaction);
@@ -192,35 +183,18 @@ public class Devoir5
                     System.out.println("\nListe des juges actifs et disponibles :");
 
                     gestionJustice.getGestionJuge().affichage();
-                    // Affichage des juges un à un
-//                    for (Juge j : juge)
-//                    {
-//                        System.out.println(j.getId() + "\t" + j.getPrenom() + "\t" + j.getNom() + "\t" + j.getAge());
-//                    }
                 }
                 else if (command.equals("afficherProces"))
                 {
+                    int idProces = readInt(tokenizer);
                     // Appel de la methode qui traite la transaction specifique                   
-//                    System.out.println("Affichage du proces " + proces.getId());
+                    System.out.println("Affichage du proces " + idProces);
 
-                    gestionJustice.getGestionProces().affichage(readInt(tokenizer));
+                    gestionJustice.getGestionProces().affichage(idProces);
                     
-//                    System.out.println(proces.getId() + "\t" + proces.getId() + "\t" + proces.getDate() + "\t"
-//                            + proces.getDevantJury() + "\t" + proces.getPartieDefenderesse() + "\t"
-//                            + proces.getPartiePoursuivant());
+                    System.out.println("\nListe des séances liées au proces " + idProces);
 
-//                    System.out.println("\nListe des séances liées au proces " + proces.getId());
-
-                    
-//                    REVOIR !!!!!
-                    
-//                    gestionJustice.getGestionSeance().affichage(proces.getId());
-                    
-                    // Affichage des séances une à une
-//                    for (Seance s : seance)
-//                    {
-//                        System.out.println(s.getId() + "\t" + s.getProces().getId() + "\t" + s.getDate());
-//                    }
+                    gestionJustice.getGestionSeance().affichage(idProces);                    
                 }
                 else if (command.equals("afficherJurys"))
                 {

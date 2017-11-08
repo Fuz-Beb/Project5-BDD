@@ -129,4 +129,12 @@ public class Proces
                 .append("devantJury", devantJury).append("partieDefenderesse_id", partieDefenderesse_id)
                 .append("partiePoursuivant_id", partiePoursuivant_id);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Proces [id=" + id + ", juge_id=" + juge_id + ", date=" + date + ", devantJury=" + devantJury
+                + ", partieDefenderesse_id=" + partieDefenderesse_id + ", partiePoursuivant_id=" + partiePoursuivant_id
+                + ", decision=" + decision + "]";
+    }
 }

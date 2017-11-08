@@ -164,4 +164,10 @@ public class Juge
         return new Document().append("id", id).append("prenom", prenom).append("nom", nom).append("age", age)
                 .append("disponible", disponible).append("quitterJustice", quitterJustice);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Juge [id=" + id + ", prenom=" + prenom + ", nom=" + nom + ", age=" + age + "]";
+    }
 }
