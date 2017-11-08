@@ -7,6 +7,9 @@ import com.mongodb.client.MongoCursor;
 
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.set;
+
+import java.util.ArrayList;
+
 import static com.mongodb.client.model.Updates.combine;
 
 /**
@@ -69,16 +72,20 @@ public class TableJuge
     /**
      * Afficher la liste des juges actifs et disponibles
      * 
+     * @return ArrayList<Juge>
      */
-    public void affichage()
+    public ArrayList<Juge> affichage()
     {
         MongoCursor<Document> juge = jugeCollection.find().iterator();
+        ArrayList<Juge> listeJuges = new ArrayList<Juge>();
 
         while (juge.hasNext())
         {
             Juge j = new Juge(juge.next());
-            System.out.println(j.toString());
+            listeJuges.add(j);
         }
+
+        return listeJuges;
     }
 
     /**

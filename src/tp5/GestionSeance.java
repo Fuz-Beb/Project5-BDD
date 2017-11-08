@@ -1,5 +1,7 @@
 package tp5;
 
+import java.util.ArrayList;
+
 /**
  * Gestion des transactions de la table seance.
  */
@@ -86,10 +88,11 @@ public class GestionSeance
      * Retourne la liste des seances liées à un proces pour affichage
      * 
      * @param id
+     * @return ArrayList<Seance>
      */
-    public void affichage(int id)
+    public ArrayList<Seance> affichage(int id)
     {
-        seance.affichage(id);
+        return seance.affichage(id);
     }
 
     /**

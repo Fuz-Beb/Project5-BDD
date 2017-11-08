@@ -1,5 +1,6 @@
 package tp5;
 
+import java.util.ArrayList;
 import java.util.Date;
 import org.bson.Document;
 
@@ -36,16 +37,20 @@ public class TableSeance
      * Affichage des seances lie a un proces
      * 
      * @param id
+     * @return ArrayList<Seance>
      */
-    public void affichage(int id)
+    public ArrayList<Seance> affichage(int id)
     {
         MongoCursor<Document> seance = seanceCollection.find().iterator();
+        ArrayList<Seance> seanceListe = new ArrayList<Seance>();
 
         while (seance.hasNext())
         {
             Seance s = new Seance(seance.next());
-            System.out.println(s.toString());
+            seanceListe.add(s);
         }
+
+        return seanceListe;
     }
 
     /**

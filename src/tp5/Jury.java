@@ -13,7 +13,7 @@ public class Jury
     private String nom;
     private String sexe;
     private int age;
-    private int proces_id;
+    private int proces_id = -1;
 
     /**
      * Constructeur par défaut

@@ -5,6 +5,7 @@
 package tp5;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import java.sql.*;
@@ -110,6 +111,12 @@ public class Devoir5
     {
         try
         {
+            // Nécessaire pour l'affichage
+            ArrayList<Juge> juge;
+            ArrayList<Jury> jury;
+            ArrayList<Seance> seance;
+            Proces proces;
+
             System.out.println(transaction);
             // Decoupage de la transaction en mots
             StringTokenizer tokenizer = new StringTokenizer(transaction, " ");
@@ -181,25 +188,40 @@ public class Devoir5
                     // Appel de la methode qui traite la transaction specifique
                     System.out.println("\nListe des juges actifs et disponibles :");
 
-                    gestionJustice.getGestionJuge().affichage();
+                    juge = gestionJustice.getGestionJuge().affichage();
+
+                    for (Juge jugeLigne : juge)
+                    {
+                        System.out.println(jugeLigne.toString());
+                    }
                 }
                 else if (command.equals("afficherProces"))
                 {
                     int idProces = readInt(tokenizer);
-                    // Appel de la methode qui traite la transaction specifique                   
+                    // Appel de la methode qui traite la transaction specifique
                     System.out.println("Affichage du proces " + idProces);
 
-                    gestionJustice.getGestionProces().affichage(idProces);
+                    proces = gestionJustice.getGestionProces().affichage(idProces);
+                    System.out.println(proces.toString());
                     
                     System.out.println("\nListe des séances liées au proces " + idProces);
+                    seance = gestionJustice.getGestionSeance().affichage(idProces);
 
-                    gestionJustice.getGestionSeance().affichage(idProces);                    
+                    for (Seance seanceLigne : seance)
+                    {
+                        System.out.println(seanceLigne.toString());
+                    }
                 }
                 else if (command.equals("afficherJurys"))
                 {
-                    // Appel de la methode qui traite la transaction specifique                    
+                    // Appel de la methode qui traite la transaction specifique
                     System.out.println("\nListe des jurys disponibles :");
-                    gestionJustice.getGestionJury().affichage();
+                    jury = gestionJustice.getGestionJury().affichage();
+
+                    for (Jury juryLigne : jury)
+                    {
+                        System.out.println(juryLigne.toString());
+                    }
                 }
                 else
                 {

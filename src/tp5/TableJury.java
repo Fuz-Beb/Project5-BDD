@@ -1,11 +1,13 @@
 package tp5;
 
 import static com.mongodb.client.model.Filters.eq;
-import java.util.List;
 
+import java.util.ArrayList;
 import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+
 import static com.mongodb.client.model.Updates.*;
 
 /**
@@ -69,12 +71,20 @@ public class TableJury
     /**
      * Affiche la liste des jurys
      * 
-     * @return String
+     * @return List<Jury>
      */
-    public List<Jury> affichage()
+    public ArrayList<Jury> affichage()
     {
-        return null;
-//        return stmtSelect.getResultList();
+        MongoCursor<Document> jury = juryCollection.find(eq("proces_id", -1)).iterator();
+        ArrayList<Jury> juryListe = new ArrayList<Jury>();
+
+        while (jury.hasNext())
+        {
+            Jury j = new Jury(jury.next());
+            juryListe.add(j);
+        }
+
+        return juryListe;
     }
 
     /**

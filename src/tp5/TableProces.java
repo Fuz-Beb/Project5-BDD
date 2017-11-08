@@ -72,16 +72,14 @@ public class TableProces
      * Affichage des elements de proces
      * 
      * @param id
+     * @return Proces
      */
-    public void affichage(int id)
+    public Proces affichage(int id)
     {
         MongoCursor<Document> proces = procesCollection.find().iterator();
 
-        while (proces.hasNext())
-        {
-            Proces p = new Proces(proces.next());
-            System.out.println(p.toString());
-        }
+        Proces p = new Proces(proces.next());
+        return p;
     }
 
     /**

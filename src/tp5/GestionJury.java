@@ -1,6 +1,6 @@
 package tp5;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Gestion des transactions de la table jury.
@@ -54,11 +54,9 @@ public class GestionJury
      * 
      * @return List<Jury>
      */
-    public List<Jury> affichage()
+    public ArrayList<Jury> affichage()
     {
-        List<Jury> list = null;
-        list = jury.affichage();
-        return list;
+        return jury.affichage();
     }
 
     /**

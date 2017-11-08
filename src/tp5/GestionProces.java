@@ -43,10 +43,11 @@ public class GestionProces
      * Methode d'affichage d'un proces
      * 
      * @param id
+     * @return Proces
      */
-    public void affichage(int id)
+    public Proces affichage(int id)
     {
-        proces.affichage(id);
+        return proces.affichage(id);
     }
 
     /**

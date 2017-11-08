@@ -1,5 +1,7 @@
 package tp5;
 
+import java.util.ArrayList;
+
 /**
  * Gestion des transaction de la table juge.
  */
@@ -50,10 +52,11 @@ public class GestionJuge
 
     /**
      * Afficher la liste des juges actifs et disponibles
+     * @return List<Juge>
      */
-    public void affichage()
+    public ArrayList<Juge> affichage()
     {
-        juge.affichage();
+        return juge.affichage();
     }
 
     /**
