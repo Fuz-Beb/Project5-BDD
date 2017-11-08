@@ -1,5 +1,6 @@
 package tp5;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import org.bson.Document;
@@ -87,7 +88,8 @@ public class TableSeance
      */
     public void supprimerSeancesProcesTermine(int id)
     {
-        seanceCollection.deleteMany(combine(eq("id", id), gt("date", new Date())));
+        seanceCollection.deleteMany(
+                combine(eq("id", id), gt("date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()))));
     }
 
     /**
@@ -119,7 +121,9 @@ public class TableSeance
      */
     public boolean seancePassee(int id)
     {
-        return seanceCollection.find(combine(eq("id", id), lt("date", new Date()))).first() != null;
+        return seanceCollection
+                .find(combine(eq("id", id), lt("date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()))))
+                .first() != null;
     }
 
     /**
