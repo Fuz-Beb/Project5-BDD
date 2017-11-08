@@ -1,7 +1,6 @@
 package tp5;
 
 import static com.mongodb.client.model.Filters.eq;
-
 import java.util.ArrayList;
 import org.bson.Document;
 
@@ -105,6 +104,20 @@ public class TableJury
      */
     public void assignerProces(int idJury, int proces_id)
     {
-        juryCollection.updateOne(eq("nasJury", idJury), set("proces_id", proces_id));
+        juryCollection.updateOne(eq("nas", idJury), set("proces_id", proces_id));
+    }
+
+    /**
+     * @param proces_id
+     */
+    public void retirer(int proces_id)
+    {
+        MongoCursor<Document> jury = juryCollection.find(eq("proces_id", proces_id)).iterator();
+
+        while (jury.hasNext())
+        {
+            Jury j = new Jury(jury.next());
+            juryCollection.updateOne(combine(eq("nas", j.getNas()), eq("proces_id", proces_id)), set("proces_id", -1));
+        }
     }
 }

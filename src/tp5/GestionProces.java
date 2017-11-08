@@ -9,6 +9,7 @@ public class GestionProces
     private TableSeance seance;
     private TableJuge juge;
     private TablePartie partie;
+    private TableJury jury;
 
     /**
      * Constructeur de confort
@@ -17,9 +18,10 @@ public class GestionProces
      * @param seance
      * @param juge
      * @param partie
+     * @param jury
      * @throws IFT287Exception
      */
-    public GestionProces(TableProces proces, TableSeance seance, TableJuge juge, TablePartie partie)
+    public GestionProces(TableProces proces, TableSeance seance, TableJuge juge, TablePartie partie, TableJury jury)
             throws IFT287Exception
     {
         proces.getConnexion();
@@ -32,11 +34,15 @@ public class GestionProces
         if (proces.getConnexion() != partie.getConnexion())
             throw new IFT287Exception(
                     "Les instances de TableProces et TablePartie n'utilisent pas la même connexion au serveur");
+        if (proces.getConnexion() != jury.getConnexion())
+            throw new IFT287Exception(
+                    "Les instances de TableProces et TableJury n'utilisent pas la même connexion au serveur");
 
         this.proces = proces;
         this.seance = seance;
         this.juge = juge;
         this.partie = partie;
+        this.jury = jury;
     }
 
     /**
@@ -84,8 +90,12 @@ public class GestionProces
                 juge.changerDisponibilite(true, idJuge);
 
             seance.supprimerSeancesProcesTermine(id);
+
+            // Permet de retirer les jury assigner au proces une fois que la
+            // décision
+            jury.retirer(id);
         }
-        catch(IFT287Exception e)
+        catch (IFT287Exception e)
         {
             throw e;
         }
@@ -142,7 +152,7 @@ public class GestionProces
         {
             return proces.getProces(id);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             throw e;
         }
