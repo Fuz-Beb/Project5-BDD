@@ -40,23 +40,6 @@ public class TableJury
     }
 
     /**
-     * Objet jury associé à un jury de la base de données
-     * 
-     * @param id
-     * @return Jury
-     */
-    public Jury getJury(int id)
-    {
-        Document j = juryCollection.find(eq("nas", id)).first();
-        if (j != null)
-        {
-            return new Jury(j);
-        }
-
-        return null;
-    }
-
-    /**
      * Vérifie si le jury existe
      * 
      * @param jury

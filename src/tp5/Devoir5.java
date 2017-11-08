@@ -87,19 +87,23 @@ public class Devoir5
      * @param user
      * @param pass
      * @throws IFT287Exception
-     * @throws SQLException
      */
-    public Devoir5(String serveur, String bd, String user, String pass) throws IFT287Exception, SQLException
+    public Devoir5(String serveur, String bd, String user, String pass) throws IFT287Exception
     {
-        gestionJustice = new GestionJustice(serveur, bd, user, pass);
+        try
+        {
+            gestionJustice = new GestionJustice(serveur, bd, user, pass);
+        }
+        catch (IFT287Exception e)
+        {
+            throw e;
+        }
     }
 
     /**
      * Fermer la connexion
-     * 
-     * @throws SQLException
      */
-    public void fermer() throws SQLException
+    public void fermer()
     {
         gestionJustice.fermer();
     }
@@ -107,7 +111,7 @@ public class Devoir5
     /**
      * Decodage et traitement d'une transaction
      */
-    static void executerTransaction(String transaction) throws Exception, IFT287Exception
+    static void executerTransaction(String transaction)
     {
         try
         {
@@ -203,7 +207,7 @@ public class Devoir5
 
                     proces = gestionJustice.getGestionProces().affichage(idProces);
                     System.out.println(proces.toString());
-                    
+
                     System.out.println("\nListe des séances liées au proces " + idProces);
                     seance = gestionJustice.getGestionSeance().affichage(idProces);
 
@@ -236,6 +240,7 @@ public class Devoir5
             e.printStackTrace();
         }
     }
+
     // ****************************************************************
     // * Les methodes suivantes n'ont pas besoin d'etre modifiees *
     // ****************************************************************
@@ -249,12 +254,19 @@ public class Devoir5
      */
     public static BufferedReader ouvrirFichier(String[] args) throws FileNotFoundException
     {
-        if (args.length < 5)
-            // Lecture au clavier
-            return new BufferedReader(new InputStreamReader(System.in));
-        else
-            // Lecture dans le fichier passe en parametre
-            return new BufferedReader(new InputStreamReader(new FileInputStream(args[4])));
+        try
+        {
+            if (args.length < 5)
+                // Lecture au clavier
+                return new BufferedReader(new InputStreamReader(System.in));
+            else
+                // Lecture dans le fichier passe en parametre
+                return new BufferedReader(new InputStreamReader(new FileInputStream(args[4])));
+        }
+        catch (FileNotFoundException e)
+        {
+            throw e;
+        }
     }
 
     /**
@@ -321,5 +333,4 @@ public class Devoir5
         else
             throw new Exception("Autre parametre attendu");
     }
-
 }

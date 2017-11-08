@@ -94,18 +94,4 @@ public class GestionSeance
     {
         return seance.affichage(id);
     }
-
-    /**
-     * Retourne le partie demandé et reçu par TableSeance
-     * 
-     * @param id
-     * @return Seance
-     */
-    public Seance getSeance(int id)
-    {
-        Seance list = null;
-        list = seance.getSeance(id);
-
-        return list;
-    }
 }

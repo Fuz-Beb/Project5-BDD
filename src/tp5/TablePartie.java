@@ -36,23 +36,6 @@ public class TablePartie
     }
 
     /**
-     * Retourne le partie demandé
-     * 
-     * @param id
-     * @return Partie
-     */
-    public Partie getPartie(int id)
-    {
-        Document p = partieCollection.find(eq("id", id)).first();
-        if (p != null)
-        {
-            return new Partie(p);
-        }
-
-        return null;
-    }
-
-    /**
      * Vérifie si un partie existe.
      * 
      * @param partie_id

@@ -37,18 +37,4 @@ public class GestionAvocat
             throw e;
         }
     }
-
-    /**
-     * Retourne l'avocat demandé et reçu par TableAvocat
-     * 
-     * @param id
-     * @return Avocat
-     */
-    public Avocat getAvocat(int id)
-    {
-        Avocat avocatObj = null;
-        avocatObj = avocat.getAvocat(id);
-
-        return avocatObj;
-    }
 }

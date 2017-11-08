@@ -33,21 +33,28 @@ public class GestionJustice
      */
     public GestionJustice(String serveur, String bd, String user, String password) throws IFT287Exception
     {
-        cx = new Connexion(serveur, bd, user, password);
+        try
+        {
+            cx = new Connexion(serveur, bd, user, password);
 
-        proces = new TableProces(cx);
-        partie = new TablePartie(cx);
-        seance = new TableSeance(cx);
-        jury = new TableJury(cx);
-        juge = new TableJuge(cx);
-        avocat = new TableAvocat(cx);
+            proces = new TableProces(cx);
+            partie = new TablePartie(cx);
+            seance = new TableSeance(cx);
+            jury = new TableJury(cx);
+            juge = new TableJuge(cx);
+            avocat = new TableAvocat(cx);
 
-        gestionProces = new GestionProces(proces, seance, juge, partie, jury);
-        gestionPartie = new GestionPartie(partie, avocat);
-        gestionSeance = new GestionSeance(seance, proces);
-        gestionJury = new GestionJury(jury, proces);
-        gestionJuge = new GestionJuge(juge, proces);
-        gestionAvocat = new GestionAvocat(avocat);
+            gestionProces = new GestionProces(proces, seance, juge, partie, jury);
+            gestionPartie = new GestionPartie(partie, avocat);
+            gestionSeance = new GestionSeance(seance, proces);
+            gestionJury = new GestionJury(jury, proces);
+            gestionJuge = new GestionJuge(juge, proces);
+            gestionAvocat = new GestionAvocat(avocat);
+        }
+        catch (IFT287Exception e)
+        {
+            throw e;
+        }
     }
 
     /**
@@ -59,28 +66,11 @@ public class GestionJustice
     }
 
     /**
-     * @return the cx
-     */
-    public Connexion getCx()
-    {
-        return cx;
-    }
-
-    /**
      * @return the gestionProces
      */
     public GestionProces getGestionProces()
     {
         return gestionProces;
-    }
-
-    /**
-     * @param gestionProces
-     *            the gestionProces to set
-     */
-    public void setGestionProces(GestionProces gestionProces)
-    {
-        this.gestionProces = gestionProces;
     }
 
     /**
@@ -92,29 +82,11 @@ public class GestionJustice
     }
 
     /**
-     * @param gestionPartie
-     *            the gestionPartie to set
-     */
-    public void setGestionPartie(GestionPartie gestionPartie)
-    {
-        this.gestionPartie = gestionPartie;
-    }
-
-    /**
      * @return the gestionSeance
      */
     public GestionSeance getGestionSeance()
     {
         return gestionSeance;
-    }
-
-    /**
-     * @param gestionSeance
-     *            the gestionSeance to set
-     */
-    public void setGestionSeance(GestionSeance gestionSeance)
-    {
-        this.gestionSeance = gestionSeance;
     }
 
     /**
@@ -126,15 +98,6 @@ public class GestionJustice
     }
 
     /**
-     * @param gestionJury
-     *            the gestionJury to set
-     */
-    public void setGestionJury(GestionJury gestionJury)
-    {
-        this.gestionJury = gestionJury;
-    }
-
-    /**
      * @return the gestionJuge
      */
     public GestionJuge getGestionJuge()
@@ -143,28 +106,10 @@ public class GestionJustice
     }
 
     /**
-     * @param gestionJuge
-     *            the gestionJuge to set
-     */
-    public void setGestionJuge(GestionJuge gestionJuge)
-    {
-        this.gestionJuge = gestionJuge;
-    }
-
-    /**
      * @return the gestionAvocat
      */
     public GestionAvocat getGestionAvocat()
     {
         return gestionAvocat;
-    }
-
-    /**
-     * @param gestionAvocat
-     *            the gestionAvocat to set
-     */
-    public void setGestionAvocat(GestionAvocat gestionAvocat)
-    {
-        this.gestionAvocat = gestionAvocat;
     }
 }

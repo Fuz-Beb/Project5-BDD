@@ -37,31 +37,32 @@ public class Connexion
      */
     public Connexion(String serveur, String bd, String user, String pass) throws IFT287Exception
     {
-    	if (serveur.equals("local"))
+        if (serveur.equals("local"))
         {
             client = new MongoClient();
         }
         else if (serveur.equals("dinf"))
         {
-        	MongoClientURI uri = new MongoClientURI("mongodb://"+user+":"+pass+"@hibou.dinf.fsci.usherbrooke.ca:27017/"+bd+"?ssl=false");
-        	client = new MongoClient(uri);
+            MongoClientURI uri = new MongoClientURI(
+                    "mongodb://" + user + ":" + pass + "@hibou.dinf.fsci.usherbrooke.ca:27017/" + bd + "?ssl=false");
+            client = new MongoClient(uri);
         }
         else if (serveur.equals("srvExterne"))
         {
-            MongoClientURI uri = new MongoClientURI("mongodb://"+user+":"+pass+"@ds249545.mlab.com:49545/"+bd+"?ssl=false");
+            MongoClientURI uri = new MongoClientURI(
+                    "mongodb://" + user + ":" + pass + "@ds249545.mlab.com:49545/" + bd + "?ssl=false");
             client = new MongoClient(uri);
         }
         else
         {
             throw new IFT287Exception("Serveur inconnu");
         }
-        
-    	client.setReadPreference(ReadPreference.primary());
-    	database = client.getDatabase(bd);
-    	
-    	System.out.println("Ouverture de la connexion :\n"
-                + "Connecté sur la BD MongoDB "
-                + bd + " avec l'utilisateur " + user);
+
+        client.setReadPreference(ReadPreference.primary());
+        database = client.getDatabase(bd);
+
+        System.out.println(
+                "Ouverture de la connexion :\n" + "Connecté sur la BD MongoDB " + bd + " avec l'utilisateur " + user);
     }
 
     /**
@@ -72,8 +73,7 @@ public class Connexion
         client.close();
         System.out.println("Connexion fermée");
     }
-    
-    
+
     /**
      * retourne la Connection MongoDB
      */
@@ -81,7 +81,7 @@ public class Connexion
     {
         return client;
     }
-    
+
     /**
      * retourne la DataBase MongoDB
      */

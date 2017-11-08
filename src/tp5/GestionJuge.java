@@ -52,7 +52,8 @@ public class GestionJuge
 
     /**
      * Afficher la liste des juges actifs et disponibles
-     * @return List<Juge>
+     * 
+     * @return ArrayList<Juge>
      */
     public ArrayList<Juge> affichage()
     {
@@ -76,25 +77,6 @@ public class GestionJuge
             juge.retirer(id);
         }
         catch (IFT287Exception e)
-        {
-            throw e;
-        }
-    }
-
-    /**
-     * Retourne le juge demandé et reçu par TableJuge
-     * 
-     * @param id
-     * @return Juge
-     * @throws Exception
-     */
-    public Juge getJuge(int id) throws Exception
-    {
-        try
-        {
-            return juge.getJuge(id);
-        }
-        catch (Exception e)
         {
             throw e;
         }

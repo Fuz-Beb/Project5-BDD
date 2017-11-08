@@ -75,20 +75,4 @@ public class GestionJury
 
         jury.assignerProces(idJury, proces_id);
     }
-
-    /**
-     * Retourne le jury demandé et reçu par TableJury
-     * 
-     * @param id
-     * @return Jury
-     */
-    public Jury getJury(int id)
-    {
-        Jury list = null;
-
-        list = jury.getJury(id);
-
-        return list;
-
-    }
 }

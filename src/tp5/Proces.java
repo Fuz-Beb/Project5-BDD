@@ -49,9 +49,10 @@ public class Proces
      * @param devantJury
      * @param partieDefenderesse_id
      * @param partiePoursuivant_id
-     * @param decision 
+     * @param decision
      */
-    public Proces(int id, int juge_id, Date date, int devantJury, int partieDefenderesse_id, int partiePoursuivant_id, String decision)
+    public Proces(int id, int juge_id, Date date, int devantJury, int partieDefenderesse_id, int partiePoursuivant_id,
+            String decision)
     {
         this.id = id;
         this.juge_id = juge_id;
@@ -79,14 +80,6 @@ public class Proces
     }
 
     /**
-     * @return the date
-     */
-    public Date getDate()
-    {
-        return date;
-    }
-
-    /**
      * @return the devantJury
      */
     public int getDevantJury()
@@ -111,14 +104,6 @@ public class Proces
     }
 
     /**
-     * @return the decision
-     */
-    public String getDecision()
-    {
-        return decision;
-    }
-
-    /**
      * Retourne l'objet courant sous forme de document
      * 
      * @return Document
@@ -127,8 +112,7 @@ public class Proces
     {
         return new Document().append("id", id).append("juge_id", juge_id).append("date", date)
                 .append("devantJury", devantJury).append("partieDefenderesse_id", partieDefenderesse_id)
-                .append("partiePoursuivant_id", partiePoursuivant_id)
-                .append("decision", decision);
+                .append("partiePoursuivant_id", partiePoursuivant_id).append("decision", decision);
     }
 
     @Override

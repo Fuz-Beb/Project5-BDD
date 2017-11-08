@@ -65,23 +65,6 @@ public class TableSeance
     }
 
     /**
-     * Objet seance associé à une seance de la base de données
-     * 
-     * @param id
-     * @return Seance
-     */
-    public Seance getSeance(int id)
-    {
-        Document s = seanceCollection.find(eq("id", id)).first();
-        if (s != null)
-        {
-            return new Seance(s);
-        }
-
-        return null;
-    }
-
-    /**
      * Suppresion des seances prevues du proces
      * 
      * @param id

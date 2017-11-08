@@ -36,23 +36,6 @@ public class TableAvocat
     }
 
     /**
-     * Retourne l'avocat demandé
-     * 
-     * @param id
-     * @return Avocat
-     */
-    public Avocat getAvocat(int id)
-    {
-        Document a = avocatCollection.find(eq("id", id)).first();
-        if (a != null)
-        {
-            return new Avocat(a);
-        }
-
-        return null;
-    }
-
-    /**
      * Vérifie si l'avocat existe
      * 
      * @param avocat_id

@@ -42,23 +42,6 @@ public class TableJuge
     }
 
     /**
-     * Objet juge associé à un juge de la base de données
-     * 
-     * @param id
-     * @return Juge
-     * @throws Exception
-     */
-    public Juge getJuge(int id) throws Exception
-    {
-        Document a = jugeCollection.find(eq("id", id)).first();
-        if (a != null)
-        {
-            return new Juge(a);
-        }
-        return null;
-    }
-
-    /**
      * Vérifie si le juge existe
      * 
      * @param id

@@ -41,23 +41,6 @@ public class TableProces
     }
 
     /**
-     * Objet proces associé à un proces de la base de données
-     * 
-     * @param id
-     * @return Proces
-     * @throws Exception
-     */
-    public Proces getProces(int id) throws Exception
-    {
-        Document a = procesCollection.find(eq("id", id)).first();
-        if (a != null)
-        {
-            return new Proces(a);
-        }
-        return null;
-    }
-
-    /**
      * Verification de l'existance d'un proces
      * 
      * @param idProces

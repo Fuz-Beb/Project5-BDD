@@ -138,23 +138,4 @@ public class GestionProces
             throw e;
         }
     }
-
-    /**
-     * Retourne le proces demandé et reçu par TableProces
-     * 
-     * @param id
-     * @return Partie
-     * @throws Exception
-     */
-    public Proces getProces(int id) throws Exception
-    {
-        try
-        {
-            return proces.getProces(id);
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-    }
 }

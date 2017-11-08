@@ -52,17 +52,4 @@ public class GestionPartie
             throw e;
         }
     }
-
-    /**
-     * Retourne le partie demandé et reçu par TablePartie
-     * 
-     * @param id
-     * @return Partie
-     */
-    public Partie getPartie(int id)
-    {
-        Partie list = null;
-        list = partie.getPartie(id);
-        return list;
-    }
 }

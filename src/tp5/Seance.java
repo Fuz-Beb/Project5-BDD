@@ -64,45 +64,11 @@ public class Seance
     }
 
     /**
-     * @param id
-     *            the id to set
-     */
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-
-    /**
      * @return Proces
      */
     public int getProces()
     {
         return proces_id;
-    }
-
-    /**
-     * @param proces
-     */
-    public void setProces(int proces)
-    {
-        this.proces_id = proces;
-    }
-
-    /**
-     * @return the date
-     */
-    public Date getDate()
-    {
-        return date;
-    }
-
-    /**
-     * @param date
-     *            the date to set
-     */
-    public void setDate(Date date)
-    {
-        this.date = date;
     }
 
     /**
