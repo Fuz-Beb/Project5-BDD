@@ -1,7 +1,5 @@
 package tp5;
 
-import java.util.List;
-
 /**
  * Gestion des transactions de la table seance.
  */
@@ -61,22 +59,22 @@ public class GestionSeance
     /**
      * Supprimer une seance
      * 
-     * @param seanceArg
+     * @param id
      * @throws Exception
      */
-    public void supprimer(Seance seanceArg) throws Exception
+    public void supprimer(int id) throws Exception
     {
         try
         {
             // Vérification si la seance existe
-            if (!seance.existe(seanceArg.getId()))
-                throw new IFT287Exception("La seance n'existe pas : " + seanceArg);
+            if (!seance.existe(id))
+                throw new IFT287Exception("La seance n'existe pas : " + id);
 
             // Vérification que la seance n'est pas encore passée
-            if (seance.seancePassee(seanceArg.getId()))
-                throw new IFT287Exception("La seance " + seanceArg + " est déjà passée.");
+            if (seance.seancePassee(id))
+                throw new IFT287Exception("La seance " + id + " est déjà passée.");
 
-            seance.supprimer(seanceArg.getId());
+            seance.supprimer(id);
         }
         catch (IFT287Exception e)
         {
@@ -88,17 +86,10 @@ public class GestionSeance
      * Retourne la liste des seances liées à un proces pour affichage
      * 
      * @param id
-     * @return List<Seance>
-     * @throws IFT287Exception
      */
-    public List<Seance> affichage(int id) throws IFT287Exception
+    public void affichage(int id)
     {
-        List<Seance> list = null;
-        if (!proces.existe(id))
-            throw new IFT287Exception("Le proces " + id + "n'existe pas");
-        else
-            list = seance.affichage(id);
-        return list;
+        seance.affichage(id);
     }
 
     /**

@@ -1,11 +1,10 @@
 package tp5;
 
 import java.util.Date;
-import java.util.List;
-
 import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 
 import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Filters.*;
@@ -37,13 +36,16 @@ public class TableSeance
      * Affichage des seances lie a un proces
      * 
      * @param id
-     * @return List<Seance>
      */
-    public List<Seance> affichage(int id)
+    public void affichage(int id)
     {
-        return null;
-        // stmtExisteProcesDansSeance.setParameter("idProces", id);
-        // return stmtExisteProcesDansSeance.getResultList();
+        MongoCursor<Document> seance = seanceCollection.find().iterator();
+
+        while (seance.hasNext())
+        {
+            Seance s = new Seance(seance.next());
+            System.out.println(s.toString());
+        }
     }
 
     /**

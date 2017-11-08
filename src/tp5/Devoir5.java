@@ -189,36 +189,38 @@ public class Devoir5
                 else if (command.equals("afficherJuges"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    juge = gestionJustice.getGestionJuge().affichage();
-
                     System.out.println("\nListe des juges actifs et disponibles :");
 
+                    gestionJustice.getGestionJuge().affichage();
                     // Affichage des juges un à un
-                    for (Juge j : juge)
-                    {
-                        System.out.println(j.getId() + "\t" + j.getPrenom() + "\t" + j.getNom() + "\t" + j.getAge());
-                    }
+//                    for (Juge j : juge)
+//                    {
+//                        System.out.println(j.getId() + "\t" + j.getPrenom() + "\t" + j.getNom() + "\t" + j.getAge());
+//                    }
                 }
                 else if (command.equals("afficherProces"))
                 {
-                    // Appel de la methode qui traite la transaction specifique
-                    proces = gestionJustice.getGestionProces().affichage(readInt(tokenizer));
+                    // Appel de la methode qui traite la transaction specifique                   
+//                    System.out.println("Affichage du proces " + proces.getId());
 
-                    System.out.println("Affichage du proces " + proces.getId());
+                    gestionJustice.getGestionProces().affichage(readInt(tokenizer));
+                    
+//                    System.out.println(proces.getId() + "\t" + proces.getId() + "\t" + proces.getDate() + "\t"
+//                            + proces.getDevantJury() + "\t" + proces.getPartieDefenderesse() + "\t"
+//                            + proces.getPartiePoursuivant());
 
-                    System.out.println(proces.getId() + "\t" + proces.getId() + "\t" + proces.getDate() + "\t"
-                            + proces.getDevantJury() + "\t" + proces.getPartieDefenderesse() + "\t"
-                            + proces.getPartiePoursuivant());
+//                    System.out.println("\nListe des séances liées au proces " + proces.getId());
 
-                    seance = gestionJustice.getGestionSeance().affichage(proces.getId());
-
-                    System.out.println("\nListe des séances liées au proces " + proces.getId());
-
+                    
+//                    REVOIR !!!!!
+                    
+//                    gestionJustice.getGestionSeance().affichage(proces.getId());
+                    
                     // Affichage des séances une à une
-                    for (Seance s : seance)
-                    {
-                        System.out.println(s.getId() + "\t" + s.getProces().getId() + "\t" + s.getDate());
-                    }
+//                    for (Seance s : seance)
+//                    {
+//                        System.out.println(s.getId() + "\t" + s.getProces().getId() + "\t" + s.getDate());
+//                    }
                 }
                 else if (command.equals("afficherJurys"))
                 {

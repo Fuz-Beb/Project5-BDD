@@ -1,11 +1,11 @@
 package tp5;
 
 import java.util.Date;
-import java.util.List;
-
 import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.set;
 import static com.mongodb.client.model.Updates.combine;
@@ -60,7 +60,7 @@ public class TableProces
     /**
      * Verification de l'existance d'un proces
      * 
-     * @param id
+     * @param idProces
      * @return boolean
      */
     public boolean existe(int idProces)
@@ -72,19 +72,22 @@ public class TableProces
      * Affichage des elements de proces
      * 
      * @param id
-     * @return String
-     * @throws IFT287Exception
      */
-    public Proces affichage(int id) throws IFT287Exception
+    public void affichage(int id)
     {
-        stmtExiste.setParameter("id", id);
-        return stmtExiste.getSingleResult();
+        MongoCursor<Document> proces = procesCollection.find().iterator();
+
+        while (proces.hasNext())
+        {
+            Proces p = new Proces(proces.next());
+            System.out.println(p.toString());
+        }
     }
 
     /**
      * Vérification que le proces a atteint sa date initiale
      * 
-     * @param id
+     * @param idProces
      * @return boolean
      */
     public boolean compareDate(int idProces)
@@ -97,8 +100,7 @@ public class TableProces
      * Terminer le proces
      * 
      * @param decision
-     * @param id
-     * @return boolean
+     * @param idProces
      */
     public void terminer(String decision, int idProces)
     {
@@ -108,8 +110,9 @@ public class TableProces
     /**
      * Permet de récuperer le juge du proces
      * 
-     * @param id
+     * @param idProces
      * @return int
+     * 
      */
     public int getJugeProces(int idProces)
     {
@@ -119,7 +122,7 @@ public class TableProces
     /**
      * Verifier si un juge a des proces en cours
      * 
-     * @param id
+     * @param idJuge
      * @return boolean
      */
     public boolean jugeEnCours(int idJuge)
@@ -131,9 +134,6 @@ public class TableProces
      * Ajout du proces
      * 
      * @param proces
-     * @return Proces
-     * @throws IllegalArgumentException
-     * @throws TransactionRequiredException
      */
     public void creer(Proces proces)
     {

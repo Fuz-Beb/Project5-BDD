@@ -5,7 +5,6 @@ package tp5;
  */
 public class GestionProces
 {
-    private Connexion cx;
     private TableProces proces;
     private TableSeance seance;
     private TableJuge juge;
@@ -23,7 +22,7 @@ public class GestionProces
     public GestionProces(TableProces proces, TableSeance seance, TableJuge juge, TablePartie partie)
             throws IFT287Exception
     {
-        this.cx = proces.getConnexion();
+        proces.getConnexion();
         if (proces.getConnexion() != seance.getConnexion())
             throw new IFT287Exception(
                     "Les instances de TableProces et TableSeance n'utilisent pas la même connexion au serveur");
@@ -44,30 +43,10 @@ public class GestionProces
      * Methode d'affichage d'un proces
      * 
      * @param id
-     * @return Proces
-     * @throws IFT287Exception
      */
-    public Proces affichage(int id) throws IFT287Exception
+    public void affichage(int id)
     {
-        Proces list = null;
-        try
-        {
-            cx.getConnection().getTransaction().begin();
-
-            if (!proces.existe(id))
-                throw new IFT287Exception("Le proces " + id + " n'existe pas");
-            else
-                list = proces.affichage(id);
-
-            cx.getConnection().getTransaction().commit();
-
-            return list;
-        }
-        finally
-        {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
-        }
+        proces.affichage(id);
     }
 
     /**

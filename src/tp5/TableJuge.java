@@ -1,10 +1,10 @@
 package tp5;
 
-import java.util.List;
-
 import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.set;
 import static com.mongodb.client.model.Updates.combine;
@@ -69,20 +69,22 @@ public class TableJuge
     /**
      * Afficher la liste des juges actifs et disponibles
      * 
-     * @return List<Juge>
      */
-    public List<Juge> affichage()
+    public void affichage()
     {
-        return stmtSelect.getResultList();
+        MongoCursor<Document> juge = jugeCollection.find().iterator();
+
+        while (juge.hasNext())
+        {
+            Juge j = new Juge(juge.next());
+            System.out.println(j.toString());
+        }
     }
 
     /**
      * Ajout d'un nouveau juge dans la base de données
      * 
      * @param juge
-     * @return Le juge qui a été ajouté
-     * @throws IllegalArgumentException
-     * @throws TransactionRequiredException
      */
     public void ajouter(Juge juge)
     {
@@ -93,7 +95,6 @@ public class TableJuge
      * Retirer le juge de la base de données
      * 
      * @param id
-     * @return vrai si suppresion OK sinon faux
      */
     public void retirer(int id)
     {
@@ -105,7 +106,6 @@ public class TableJuge
      * 
      * @param disponible
      * @param id
-     * @return boolean
      */
     public void changerDisponibilite(boolean disponible, int id)
     {

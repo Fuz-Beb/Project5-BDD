@@ -1,7 +1,5 @@
 package tp5;
 
-import java.util.List;
-
 /**
  * Gestion des transaction de la table juge.
  */
@@ -9,7 +7,6 @@ public class GestionJuge
 {
     private TableJuge juge;
     private TableProces proces;
-    private Connexion cx;
 
     /**
      * Constructeur de confort
@@ -20,7 +17,7 @@ public class GestionJuge
      */
     public GestionJuge(TableJuge juge, TableProces proces) throws IFT287Exception
     {
-        this.cx = juge.getConnexion();
+        juge.getConnexion();
 
         if (juge.getConnexion() != proces.getConnexion())
             throw new IFT287Exception(
@@ -53,27 +50,10 @@ public class GestionJuge
 
     /**
      * Afficher la liste des juges actifs et disponibles
-     * 
-     * @return List<Juge>
      */
-    public List<Juge> affichage()
+    public void affichage()
     {
-        List<Juge> list = null;
-        try
-        {
-            cx.getConnection().getTransaction().begin();
-
-            list = juge.affichage();
-
-            cx.getConnection().getTransaction().commit();
-
-            return list;
-        }
-        finally
-        {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
-        }
+        juge.affichage();
     }
 
     /**
