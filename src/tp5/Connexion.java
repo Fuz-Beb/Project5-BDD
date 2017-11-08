@@ -46,6 +46,11 @@ public class Connexion
         	MongoClientURI uri = new MongoClientURI("mongodb://"+user+":"+pass+"@hibou.dinf.fsci.usherbrooke.ca:27017/"+bd+"?ssl=false");
         	client = new MongoClient(uri);
         }
+        else if (serveur.equals("srvExterne"))
+        {
+            MongoClientURI uri = new MongoClientURI("mongodb://"+user+":"+pass+"@ds249545.mlab.com:49545/"+bd+"?ssl=false");
+            client = new MongoClient(uri);
+        }
         else
         {
             throw new IFT287Exception("Serveur inconnu");

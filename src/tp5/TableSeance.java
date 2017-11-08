@@ -31,7 +31,7 @@ public class TableSeance
     public TableSeance(Connexion cx)
     {
         this.cx = cx;
-        seanceCollection = cx.getDatabase().getCollection("Partie");
+        seanceCollection = cx.getDatabase().getCollection("Seance");
     }
 
     /**

@@ -154,7 +154,7 @@ public class Devoir5
                 {
                     // Appel de la methode qui traite la transaction specifique
                     gestionJustice.getGestionProces().creer(new Proces(readInt(tokenizer), readInt(tokenizer),
-                            readDate(tokenizer), readInt(tokenizer), readInt(tokenizer), readInt(tokenizer)));
+                            readDate(tokenizer), readInt(tokenizer), readInt(tokenizer), readInt(tokenizer), null));
                 }
                 else if (command.equals("inscrireJury"))
                 {

@@ -171,4 +171,11 @@ public class Jury
         return new Document().append("nas", nas).append("prenom", prenom).append("nom", nom).append("sexe", sexe)
                 .append("age", age).append("proces_id", proces_id);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Jury [nas=" + nas + ", prenom=" + prenom + ", nom=" + nom + ", sexe=" + sexe + ", age=" + age
+                + ", proces_id=" + proces_id + "]";
+    }
 }

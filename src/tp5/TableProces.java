@@ -1,6 +1,5 @@
 package tp5;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.bson.Document;
 
@@ -91,9 +90,8 @@ public class TableProces
      */
     public boolean compareDate(int idProces)
     {
-        // A REVOIR
         return procesCollection.find(
-                combine(eq("id", idProces), lt("date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()))))
+                combine(eq("id", idProces), lt("date", new Date())))
                 .first() != null;
     }
 

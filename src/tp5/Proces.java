@@ -37,9 +37,7 @@ public class Proces
     public Proces(Document a)
     {
         this(a.getInteger("id"), a.getInteger("juge_id"), a.getDate("date"), a.getInteger("devantJury"),
-                a.getInteger("partieDefenderesse_id"), a.getInteger("partiePoursuivant_id"));
-
-        this.decision = a.getString("decision");
+                a.getInteger("partieDefenderesse_id"), a.getInteger("partiePoursuivant_id"), a.getString("decision"));
     }
 
     /**
@@ -51,8 +49,9 @@ public class Proces
      * @param devantJury
      * @param partieDefenderesse_id
      * @param partiePoursuivant_id
+     * @param decision 
      */
-    public Proces(int id, int juge_id, Date date, int devantJury, int partieDefenderesse_id, int partiePoursuivant_id)
+    public Proces(int id, int juge_id, Date date, int devantJury, int partieDefenderesse_id, int partiePoursuivant_id, String decision)
     {
         this.id = id;
         this.juge_id = juge_id;
@@ -60,6 +59,7 @@ public class Proces
         this.devantJury = devantJury;
         this.partieDefenderesse_id = partieDefenderesse_id;
         this.partiePoursuivant_id = partiePoursuivant_id;
+        this.decision = decision;
     }
 
     /**
@@ -127,7 +127,8 @@ public class Proces
     {
         return new Document().append("id", id).append("juge_id", juge_id).append("date", date)
                 .append("devantJury", devantJury).append("partieDefenderesse_id", partieDefenderesse_id)
-                .append("partiePoursuivant_id", partiePoursuivant_id);
+                .append("partiePoursuivant_id", partiePoursuivant_id)
+                .append("decision", decision);
     }
 
     @Override
