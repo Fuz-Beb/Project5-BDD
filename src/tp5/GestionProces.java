@@ -1,118 +1,63 @@
 package tp5;
 
-import java.util.List;
-
 /**
- * Gestion des transactions de la table seance.
+ * Gestion des transactions de la table proces
  */
-public class GestionSeance
+public class GestionProces
 {
-    private TableSeance seance;
-    private TableProces proces;
     private Connexion cx;
+    private TableProces proces;
+    private TableSeance seance;
+    private TableJuge juge;
+    private TablePartie partie;
 
     /**
      * Constructeur de confort
      * 
-     * @param seance
      * @param proces
+     * @param seance
+     * @param juge
+     * @param partie
      * @throws IFT287Exception
      */
-    public GestionSeance(TableSeance seance, TableProces proces) throws IFT287Exception
+    public GestionProces(TableProces proces, TableSeance seance, TableJuge juge, TablePartie partie)
+            throws IFT287Exception
     {
-        this.cx = seance.getConnexion();
-        if (seance.getConnexion() != proces.getConnexion())
+        this.cx = proces.getConnexion();
+        if (proces.getConnexion() != seance.getConnexion())
             throw new IFT287Exception(
-                    "Les instances de TableSeance et de TableProces n'utilisent pas la même connexion au serveur");
-        this.seance = seance;
+                    "Les instances de TableProces et TableSeance n'utilisent pas la même connexion au serveur");
+        if (proces.getConnexion() != juge.getConnexion())
+            throw new IFT287Exception(
+                    "Les instances de TableProces et TableJuge n'utilisent pas la même connexion au serveur");
+        if (proces.getConnexion() != partie.getConnexion())
+            throw new IFT287Exception(
+                    "Les instances de TableProces et TablePartie n'utilisent pas la même connexion au serveur");
+
         this.proces = proces;
+        this.seance = seance;
+        this.juge = juge;
+        this.partie = partie;
     }
 
     /**
-     * Ajout d'une nouvelle seance dans la base de données. S'il existe déjà,
-     * une exception est levée.
-     * 
-     * @param seanceArg
-     * @throws Exception
-     */
-    public void ajout(Seance seanceArg) throws Exception
-    {
-        try
-        {
-            cx.getConnection().getTransaction().begin();
-
-            // Vérification si la seance existe deja
-            if (seance.existe(seanceArg.getId()))
-                throw new IFT287Exception("La seance existe deja: " + seanceArg.getId());
-
-            // Verification si le proces existe
-            if (!proces.existe(seanceArg.getProces().getId()))
-                throw new IFT287Exception("Le proces " + seanceArg.getProces().getId() + " n'existe pas.");
-
-            // Verification si le proces specifie n'est pas termine
-            if (!proces.verifierProcesTermine(new Proces(seanceArg.getProces().getId())))
-                throw new IFT287Exception("Le proces " + seanceArg.getProces().getId() + " est termine.");
-
-            seance.ajout(seanceArg);
-
-            cx.getConnection().getTransaction().commit();
-        }
-        finally
-        {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
-        }
-    }
-
-    /**
-     * Supprimer une seance
-     * 
-     * @param seanceArg
-     * @throws Exception
-     */
-    public void supprimer(Seance seanceArg) throws Exception
-    {
-        try
-        {
-            cx.getConnection().getTransaction().begin();
-
-            // Vérification si la seance existe
-            if (!seance.existe(seanceArg.getId()))
-                throw new IFT287Exception("La seance n'existe pas : " + seanceArg);
-
-            // Vérification que la seance n'est pas encore passée
-            if (seance.seancePassee(seanceArg.getId()))
-                throw new IFT287Exception("La seance " + seanceArg + " est déjà passée.");
-
-            seance.supprimer(seanceArg);
-
-            cx.getConnection().getTransaction().commit();
-        }
-        finally
-        {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
-        }
-    }
-
-    /**
-     * Retourne la liste des seances liées à un proces pour affichage
+     * Methode d'affichage d'un proces
      * 
      * @param id
-     * @return List<Seance>
+     * @return Proces
      * @throws IFT287Exception
      */
-    public List<Seance> affichage(int id) throws IFT287Exception
+    public Proces affichage(int id) throws IFT287Exception
     {
-        List<Seance> list = null;
+        Proces list = null;
         try
         {
             cx.getConnection().getTransaction().begin();
 
             if (!proces.existe(id))
-                throw new IFT287Exception("Le proces " + id + "n'existe pas");
+                throw new IFT287Exception("Le proces " + id + " n'existe pas");
             else
-                list = seance.affichage(id);
+                list = proces.affichage(id);
 
             cx.getConnection().getTransaction().commit();
 
@@ -124,31 +69,102 @@ public class GestionSeance
                 cx.getConnection().getTransaction().rollback();
         }
     }
-    
+
     /**
-     * Retourne le partie demandé et reçu par TableSeance
+     * Methode de traitement pour effectuerTerminerProces
      * 
      * @param id
-     * @return Seance
+     * @param decisionProces
      * @throws Exception
      */
-    public Seance getSeance(int id) throws Exception
+    public void terminer(int id, String decisionProces) throws Exception
     {
-        Seance list = null;
         try
         {
-            cx.getConnection().getTransaction().begin();
+            int idJuge = 0;
 
-            list = seance.getSeance(id);
+            // Verification de la valeur de la decision
+            if (!decisionProces.equals("0") && !decisionProces.equals("1"))
+                throw new IFT287Exception(
+                        "Impossible de terminer le proces " + id + " car la valeur doit être 0 ou 1.");
 
-            cx.getConnection().getTransaction().commit();
+            // Vérification que le proces existe
+            if (!proces.existe(id))
+                throw new IFT287Exception("Le proces " + id + " n'existe pas.");
 
-            return list;
+            // Vérification que le proces a atteint sa date initiale
+            if (!proces.compareDate(id))
+                throw new IFT287Exception("Le proces " + id + " n'a pas atteint sa date initiale.");
+
+            proces.terminer(decisionProces, id);
+
+            idJuge = proces.getJugeProces(id);
+
+            if (!proces.jugeEnCours(idJuge))
+                juge.changerDisponibilite(true, idJuge);
+
+            seance.supprimerSeancesProcesTermine(id);
         }
-        finally
+        catch(IFT287Exception e)
         {
-            if (cx.getConnection().getTransaction().isActive())
-                cx.getConnection().getTransaction().rollback();
+            throw e;
+        }
+    }
+
+    /**
+     * Permet de creer un proces
+     * 
+     * @param procesArg
+     * @throws Exception
+     */
+    public void creer(Proces procesArg) throws Exception
+    {
+        try
+        {
+            if (procesArg.getDevantJury() != 0 && procesArg.getDevantJury() != 1)
+                throw new IFT287Exception("Impossible de creer le proces " + procesArg.getId()
+                        + "car le champ devantJury ne peut être que 0 ou 1");
+
+            // Vérification que le proces n'existe pas déjà
+            if (proces.existe(procesArg.getId()))
+                throw new IFT287Exception("Le proces " + procesArg.getId() + " existe déjà.");
+            // Vérification que l'id du juge est correcte
+            if (!juge.existe(procesArg.getId()))
+                throw new IFT287Exception("Le juge " + procesArg.getId() + " n'existe pas.");
+            if (!partie.existe(new Partie(procesArg.getPartieDefenderesse())))
+                throw new IFT287Exception(
+                        "La partie defenderesse " + procesArg.getPartieDefenderesse() + " n'existe pas.");
+            if (!partie.existe(new Partie(procesArg.getPartiePoursuivant())))
+                throw new IFT287Exception(
+                        "La partie poursuivante " + procesArg.getPartiePoursuivant() + " n'existe pas.");
+
+            proces.creer(procesArg);
+
+            // Rendre le juge non disponible
+            juge.changerDisponibilite(false, procesArg.getId());
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
+
+    /**
+     * Retourne le proces demandé et reçu par TableProces
+     * 
+     * @param id
+     * @return Partie
+     * @throws Exception
+     */
+    public Proces getProces(int id) throws Exception
+    {
+        try
+        {
+            return proces.getProces(id);
+        }
+        catch(Exception e)
+        {
+            throw e;
         }
     }
 }
