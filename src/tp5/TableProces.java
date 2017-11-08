@@ -76,7 +76,7 @@ public class TableProces
      */
     public Proces affichage(int id)
     {
-        MongoCursor<Document> proces = procesCollection.find().iterator();
+        MongoCursor<Document> proces = procesCollection.find(eq("id", id)).iterator();
 
         Proces p = new Proces(proces.next());
         return p;
