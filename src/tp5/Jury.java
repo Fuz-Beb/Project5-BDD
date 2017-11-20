@@ -69,6 +69,14 @@ public class Jury
     }
 
     /**
+     * @return the proces_id
+     */
+    public int getProces_id()
+    {
+        return proces_id;
+    }
+
+    /**
      * Retourne l'objet courant sous forme de document
      * 
      * @return Document

@@ -68,6 +68,8 @@ public class GestionJury
      */
     public void assignerProces(int idJury, int proces_id) throws IFT287Exception
     {
+        if (!jury.dejaProces(idJury))
+            throw new IFT287Exception("Le jury " + idJury + " est déjà en lien avec un autre proces");
         if (!proces.existe(proces_id))
             throw new IFT287Exception("Proces n'existe pas : " + proces_id);
         if (!proces.devantJury(proces_id))

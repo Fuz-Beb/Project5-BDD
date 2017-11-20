@@ -51,6 +51,19 @@ public class TableJury
     }
 
     /**
+     * Vérifie si le jury est lié à un proces
+     * 
+     * @param idJury
+     * 
+     * @param jury
+     * @return boolean
+     */
+    public boolean dejaProces(int idJury)
+    {
+        return juryCollection.find(combine(eq("nas", idJury), eq("proces_id", -1))).first() != null;
+    }
+
+    /**
      * Affiche la liste des jurys
      * 
      * @return List<Jury>
